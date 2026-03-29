@@ -1160,10 +1160,17 @@ function selectPkg(i,p){
   document.querySelectorAll('.ptrow').forEach(r=>r.classList.remove('sel'));
   document.getElementById(`pr_${i}`).classList.add('sel');
   selectedPkg=p;
+  VA.selectedPkg = p; // make Aria aware of selection
   document.getElementById('sel_name').textContent=p.name;
   document.getElementById('sel_amt').textContent=`₹${Number(p.rate).toLocaleString('en-IN')}`;
   document.getElementById('sel_amt').style.color='var(--gold)';
   document.getElementById('p_modalamt').textContent=`₹${Number(p.rate).toLocaleString('en-IN')}`;
+  // Aria acknowledges the selection
+  if(document.getElementById('vaPanel') && document.getElementById('vaPanel').classList.contains('open')){
+    const msg = `Great choice! The ${p.name} package at ₹${Number(p.rate).toLocaleString('en-IN')} is selected. Click Unlock & Download when you're ready to proceed with the payment.`;
+    addMessage('assistant', msg);
+    speak(msg);
+  }
 }
 
 /* ══════════ PORTAL — FILE LIST ══════════ */
@@ -1249,9 +1256,32 @@ function unlock(){
   document.getElementById('payForm').style.display='block';
   document.getElementById('verifying').style.display='none';
   document.getElementById('lockCard').scrollIntoView({behavior:'smooth',block:'center'});
-  // Voice celebration on unlock
+  // Voice celebration — tier-aware
   setTimeout(()=>{
-    const msg = `Wonderful! Your payment has been verified and your files are now unlocked. You can download them directly from the panel. Thank you for working with ${VA.firmName}!`;
+    VA.paidPkg = VA.selectedPkg || selectedPkg;
+    const pkg = VA.paidPkg;
+    const allPkgs = pricing.filter(p=>p.name&&p.rate);
+    const higherPkgs = pkg ? allPkgs.filter(p=>Number(p.rate)>Number(pkg.rate)) : [];
+
+    let msg = '';
+    if(pkg){
+      msg = `Wonderful, ${pkg.name} is now unlocked! `;
+      // What they get
+      const theirFiles = files.filter(f=>f.name);
+      if(theirFiles.length > 0){
+        msg += `Your ${theirFiles.length} file${theirFiles.length>1?'s are':' is'} ready to download from the panel. `;
+      }
+      // Gentle upsell if higher tiers exist
+      if(higherPkgs.length > 0){
+        const next = higherPkgs[0];
+        msg += `When you're ready to upgrade to the ${next.name} at ₹${Number(next.rate).toLocaleString('en-IN')}, just let me know and I'll guide you through it.`;
+      } else {
+        msg += `Thank you for working with ${VA.firmName}!`;
+      }
+    } else {
+      msg = `Wonderful! Your payment has been verified and your files are now unlocked. Thank you for working with ${VA.firmName}!`;
+    }
+
     if(document.getElementById('vaWrap').style.display !== 'none'){
       addMessage('assistant', msg);
       speak(msg);
@@ -1295,6 +1325,8 @@ let VA = {
   recognition: null,
   utterance: null,
   gender: 'female',
+  selectedPkg: null,  // package client selected before paying
+  paidPkg: null,      // package confirmed after payment
 };
 
 // ── Admin toggle ──
@@ -1496,7 +1528,10 @@ PAYMENT: Via UPI (Google Pay, PhonePe, BHIM). Client selects a package, pays, en
 
 FIRM: ${VA.firmName}${VA.location ? ', '+VA.location : ''}. Professional architectural services — drawings, 3D visualization, estimates, BOQ, supervision reports.
 
-Keep responses concise, warm, and action-oriented. Encourage the visitor to select a package and proceed.`;
+PAYMENT CONTEXT:
+${VA.paidPkg ? `Client has ALREADY PAID for: "${VA.paidPkg.name}" at ₹${Number(VA.paidPkg.rate).toLocaleString('en-IN')}. Their files are unlocked. If they ask about more drawings or features not in their package, gently explain what their package covers and suggest the appropriate upgrade tier by name and price. Never make them feel bad — frame it as an opportunity.` : VA.selectedPkg ? `Client has SELECTED but not yet paid for: "${VA.selectedPkg.name}" at ₹${Number(VA.selectedPkg.rate).toLocaleString('en-IN')}. Encourage them to complete payment.` : 'Client has not yet selected a package. Help them choose the right one based on their needs.'}
+
+Keep responses concise, warm, and action-oriented. If the client has already paid, focus on helping them get value from their purchase and naturally introduce upgrades only when relevant.`;
 }
 
 // ── Claude API call ──
@@ -1528,12 +1563,30 @@ function getFallbackReply(text){
   const firm = VA.firmName;
   if(t.includes('drawing') || t.includes('plan') || t.includes('what'))
     return `This portal contains ${VA.dtype} for the ${VA.project} project by ${firm}. The preview images are low resolution — full print-ready files are unlocked after payment. Scroll down to see the pricing packages.`;
-  if(t.includes('price') || t.includes('cost') || t.includes('rate') || t.includes('charge') || t.includes('fee'))
+  if(t.includes('price') || t.includes('cost') || t.includes('rate') || t.includes('charge') || t.includes('fee') || t.includes('upgrade') || t.includes('more')){
+    const paid = VA.paidPkg;
+    if(paid){
+      const allPkgs = pricing.filter(p=>p.name&&p.rate);
+      const higher = allPkgs.filter(p=>Number(p.rate)>Number(paid.rate));
+      if(higher.length > 0){
+        const next = higher[0];
+        return `Your current ${paid.name} package gives you access to the files already unlocked. To access more — like ${next.name} — you can proceed with an upgrade payment of ₹${Number(next.rate).toLocaleString('en-IN')}. Would you like me to walk you through that?`;
+      } else {
+        return `You're on our top package — ${paid.name}. All available files are already unlocked for you. Thank you for choosing ${VA.firmName}!`;
+      }
+    }
     return `We have ${pricing.filter(p=>p.name).length} pricing packages ranging from ₹${Math.min(...pricing.filter(p=>p.rate).map(p=>Number(p.rate))).toLocaleString('en-IN')} to ₹${Math.max(...pricing.filter(p=>p.rate).map(p=>Number(p.rate))).toLocaleString('en-IN')}. Select the one that matches your need in the table on the right and click Unlock to proceed.`;
+  }
   if(t.includes('pay') || t.includes('upi') || t.includes('gpay') || t.includes('how'))
     return `Payment is simple — select your package, click Unlock, scan the UPI QR code or pay to our UPI ID, then enter your 12-digit UTR reference. Your files unlock instantly once verified.`;
-  if(t.includes('file') || t.includes('receive') || t.includes('download') || t.includes('format'))
-    return `You will receive ${files.filter(f=>f.name).length} file${files.filter(f=>f.name).length!==1?'s':''} after payment — in ${[...new Set(files.filter(f=>f.fmt).map(f=>f.fmt))].join(', ')} format. All files are print-ready and delivered immediately on verification.`;
+  if(t.includes('file') || t.includes('receive') || t.includes('download') || t.includes('format') || t.includes('drawing') || t.includes('render') || t.includes('get')){
+    const paid = VA.paidPkg;
+    if(paid){
+      const fmts = [...new Set(files.filter(f=>f.fmt).map(f=>f.fmt))].join(', ');
+      return `Your ${paid.name} package includes ${files.filter(f=>f.name).length} file${files.filter(f=>f.name).length!==1?'s':''} in ${fmts} format — all available for download in the panel on the right. Is there anything specific you need help with?`;
+    }
+    return `After payment, you will receive ${files.filter(f=>f.name).length} file${files.filter(f=>f.name).length!==1?'s':''} in ${[...new Set(files.filter(f=>f.fmt).map(f=>f.fmt))].join(', ')} format — print-ready and delivered immediately on verification.`;
+  }
   if(t.includes('hello') || t.includes('hi') || t.includes('good'))
     return `Hello! I'm ${name} from ${firm}. I'm here to help you understand this drawing package and guide you through the access process. What would you like to know?`;
   if(t.includes('firm') || t.includes('architect') || t.includes('studio') || t.includes('who'))
