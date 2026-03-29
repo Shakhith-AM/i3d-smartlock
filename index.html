@@ -12,7 +12,7 @@ const BAKED_CONFIG = {
   "tag": "Architectural Intelligence · Est. 1999 · Coimbatore",
   "web": "i3dstudio.in",
   "upi": "shakhith-1@okicici",
-  "proj": "Test villa",
+  "proj": "test Antony",
   "ref": "i3D/2026/004",
   "loc": "Coimbatore, Tamil Nadu",
   "client": "",
@@ -1146,7 +1146,7 @@ const BAKED_CONFIG = {
   "tag": "Architectural Intelligence · Est. 1999 · Coimbatore",
   "web": "i3dstudio.in",
   "upi": "shakhith-1@okicici",
-  "proj": "Test villa",
+  "proj": "test Antony",
   "ref": "i3D/2026/004",
   "loc": "Coimbatore, Tamil Nadu",
   "client": "",
@@ -1183,6 +1183,227 @@ const BAKED_CONFIG = {
     }
   ]
 };
+
+/* ══ PORTAL INTERACTION FUNCTIONS ══ */
+
+function safeSet(id,val,prop='textContent'){
+  const el=document.getElementById(id); if(el) el[prop]=val;
+}
+
+function switchTab(id,btn){
+  document.querySelectorAll('.gtab').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.tpanel').forEach(p=>p.classList.remove('on'));
+  btn.classList.add('on');
+  const panel = document.getElementById('tab-'+id);
+  if(panel) panel.classList.add('on');
+}
+
+function openLB(n){
+  const cap = document.getElementById('lbcap');
+  if(cap) cap.textContent = n;
+  const lb = document.getElementById('lbox');
+  if(lb) lb.classList.add('on');
+}
+function closeLB(){
+  const lb = document.getElementById('lbox');
+  if(lb) lb.classList.remove('on');
+}
+
+const cxClass={Standard:'cx-s',Detailed:'cx-d',Complex:'cx-c'};
+
+function renderPortalPricing(){
+  const c=document.getElementById('p_ptrows'); if(!c) return; c.innerHTML='';
+  pricing.forEach((p,i)=>{
+    if(!p.name||!p.rate) return;
+    const r=document.createElement('div');
+    r.className='ptrow'; r.id='pr_'+i;
+    r.onclick=()=>selectPkg(i,p);
+    r.innerHTML='<span class="ptname">'+p.name+'</span><span><span class="ptcx '+(cxClass[p.cx]||'cx-s')+'">'+p.cx+'</span></span><span class="ptamt">₹'+Number(p.rate).toLocaleString('en-IN')+'</span>';
+    c.appendChild(r);
+  });
+}
+
+function selectPkg(i,p){
+  document.querySelectorAll('.ptrow').forEach(r=>r.classList.remove('sel'));
+  const el=document.getElementById('pr_'+i); if(el) el.classList.add('sel');
+  selectedPkg=p; VA.selectedPkg=p;
+  safeSet('sel_name',p.name);
+  const sa=document.getElementById('sel_amt');
+  if(sa){ sa.textContent='₹'+Number(p.rate).toLocaleString('en-IN'); sa.style.color='var(--gold)'; }
+  safeSet('p_modalamt','₹'+Number(p.rate).toLocaleString('en-IN'));
+}
+
+function renderPortalFiles(){
+  const c=document.getElementById('p_flist'); if(!c) return; c.innerHTML='';
+  files.forEach(f=>{
+    if(!f.name) return;
+    const el=document.createElement('div'); el.className='fitem';
+    el.innerHTML='<div class="ficon">'+(f.fmt||'SVG')+'</div><span>'+f.name+'</span><span class="fsize">'+f.size+'</span>';
+    c.appendChild(el);
+  });
+}
+
+function renderDownloads(){
+  const c=document.getElementById('p_dllist'); if(!c) return; c.innerHTML='';
+  files.forEach(f=>{
+    if(!f.name) return;
+    const a=document.createElement('a'); a.className='dlbtn';
+    const hasUrl=f.url&&f.url.startsWith('http');
+    a.href=hasUrl?f.url:'#';
+    if(hasUrl){ a.setAttribute('download',f.name); a.target='_blank'; }
+    else { a.onclick=e=>simulateDL(e,f.name); }
+    a.innerHTML='<div class="dli"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div><div>'+f.name+'<span class="dlmeta">'+f.size+' · '+(f.fmt||'File')+'</span></div>';
+    c.appendChild(a);
+  });
+  const ss=document.getElementById('p_ssub');
+  if(ss) ss.textContent=files.filter(f=>f.name).length+' file'+(files.filter(f=>f.name).length!==1?'s':'')+' unlocked';
+}
+
+function simulateDL(e,name){
+  e.preventDefault();
+  const d=e.currentTarget.querySelector('div:last-child');
+  if(!d) return;
+  const orig=d.firstChild?d.firstChild.textContent:'';
+  if(d.firstChild) d.firstChild.textContent='✓ Downloading…';
+  setTimeout(()=>{ if(d.firstChild) d.firstChild.textContent=orig; },2000);
+}
+
+function openPay(){
+  if(!selectedPkg){
+    const pt=document.getElementById('p_ptrows');
+    if(pt){ pt.style.outline='1px solid var(--gold)'; setTimeout(()=>pt.style.outline='none',1200); }
+    return;
+  }
+  const modal = document.getElementById('payModal');
+  if(modal) modal.classList.add('on');
+}
+function closePay(){
+  const modal = document.getElementById('payModal');
+  if(modal) modal.classList.remove('on');
+  const pf = document.getElementById('payForm');
+  const vf = document.getElementById('verifying');
+  if(pf) pf.style.display='block';
+  if(vf) vf.style.display='none';
+}
+
+function copyUPI(){
+  const upiEl = document.getElementById('p_upiid');
+  if(!upiEl) return;
+  navigator.clipboard.writeText(upiEl.textContent).catch(()=>{});
+  const cpn = document.querySelector('.cpynote');
+  if(cpn){
+    cpn.textContent='✓ Copied!';
+    setTimeout(()=>cpn.textContent='⊕ tap to copy · '+upiEl.textContent,2000);
+  }
+}
+
+function verify(){
+  const codeEl = document.getElementById('utrInput');
+  const nameEl = document.getElementById('nameInput');
+  if(!nameEl||!codeEl) return;
+  const code = codeEl.value.trim().toUpperCase();
+  const name = nameEl.value.trim();
+  if(!name){ nameEl.style.borderColor='#8B2020'; nameEl.focus(); return; }
+  if(!code||code.length<4){ codeEl.style.borderColor='#8B2020'; codeEl.focus(); return; }
+
+  const master  = (VA.masterCode||'').toUpperCase();
+  const clients = VA.clientCodes.map(c=>c.toUpperCase());
+  const devMode = !master && clients.length===0;
+  const validMaster = master && code===master;
+  const validClient = clients.length>0 && clients.includes(code);
+
+  if(!validMaster && !validClient && !devMode){
+    codeEl.style.borderColor='#8B2020';
+    codeEl.style.animation='shake 0.4s ease';
+    setTimeout(()=>codeEl.style.animation='',500);
+    return;
+  }
+  // Consume client code
+  if(validClient) VA.clientCodes = VA.clientCodes.filter(c=>c.toUpperCase()!==code);
+
+  const pf = document.getElementById('payForm');
+  const vf = document.getElementById('verifying');
+  if(pf) pf.style.display='none';
+  if(vf) vf.style.display='block';
+  setTimeout(()=>{ closePay(); unlock(); }, 1800);
+}
+
+function unlock(){
+  // Unlock ribbon
+  const ribbon = document.getElementById('uribbon');
+  if(ribbon) ribbon.classList.add('on');
+
+  // Unlock icon
+  const iw = document.getElementById('liwrap');
+  if(iw){ iw.classList.add('open'); iw.innerHTML='<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#7BF09C" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>'; }
+
+  // Render downloads
+  renderDownloads();
+
+  // Switch locked → unlocked state
+  setTimeout(()=>{
+    const ls = document.getElementById('lockedState');
+    const us = document.getElementById('unlockedState');
+    if(ls) ls.style.display='none';
+    if(us) us.classList.add('on');
+  }, 600);
+
+  // Remove blur from gallery
+  document.querySelectorAll('.iblur').forEach(el=>{
+    el.style.backdropFilter='none';
+    el.style.background='transparent';
+  });
+
+  // Reset form
+  const pf = document.getElementById('payForm');
+  const vf = document.getElementById('verifying');
+  if(pf) pf.style.display='block';
+  if(vf) vf.style.display='none';
+
+  // Scroll to lock card
+  const lc = document.getElementById('lockCard');
+  if(lc) lc.scrollIntoView({behavior:'smooth',block:'center'});
+
+  // Unlock YouTube video if set
+  const ytid = window._portalYTID;
+  if(ytid){
+    const locked   = document.getElementById('videoLocked');
+    const unlocked = document.getElementById('videoUnlocked');
+    const player   = document.getElementById('ytPlayer');
+    const fullLink = document.getElementById('ytFullLink');
+    if(locked)   locked.style.display   = 'none';
+    if(unlocked) unlocked.style.display = 'block';
+    if(player)   player.src = 'https://www.youtube.com/embed/'+ytid+'?autoplay=1&rel=0&modestbranding=1';
+    if(fullLink) fullLink.href = 'https://youtu.be/'+ytid;
+    setTimeout(()=>{
+      const vs = document.getElementById('videoPreviewSection');
+      if(vs) vs.scrollIntoView({behavior:'smooth', block:'start'});
+    }, 800);
+  }
+
+  // Aria unlock message
+  VA.paidPkg = VA.selectedPkg || selectedPkg;
+  setTimeout(()=>{
+    const pkg = VA.paidPkg;
+    let msg = '';
+    if(pkg){
+      msg = 'Wonderful, '+pkg.name+' is now unlocked! ';
+      const hasVideo = window._portalYTID && window._portalYTID.length>0;
+      if(hasVideo){ msg += 'Your 3D animation is now playing. Enjoy the presentation! '; }
+      else {
+        const tf = files.filter(f=>f.name);
+        if(tf.length>0) msg += 'Your '+tf.length+' file'+(tf.length>1?'s are':' is')+' ready to download. ';
+      }
+      msg += 'Thank you for working with '+VA.firmName+'!';
+    } else {
+      msg = 'Payment verified! Your files are now unlocked. Thank you!';
+    }
+    addMessage('assistant', msg);
+    speak(msg);
+    openVA();
+  }, 1000);
+}
+
 /* ══════════════════════════════════════════════════
    VOICE AI ENGINE — Aria / SmartLock Assistant
    Layers: Browser TTS (free) → Google WaveNet → ElevenLabs
