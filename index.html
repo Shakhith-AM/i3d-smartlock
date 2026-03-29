@@ -59,7 +59,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 
 /* File rows */
 .frows{display:flex;flex-direction:column;gap:10px;}
-.frow{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:10px;align-items:end;background:#071525;border:1px solid var(--ab2);border-radius:2px;padding:10px 12px;}
+.frow{display:grid;grid-template-columns:2fr 1fr 1fr 2fr auto;gap:10px;align-items:end;background:#071525;border:1px solid var(--ab2);border-radius:2px;padding:10px 12px;}
 .frow .ff{display:flex;flex-direction:column;gap:4px;}
 .frow .ff label{font-family:'DM Mono',monospace;font-size:8px;color:#4A7A9B;letter-spacing:0.12em;text-transform:uppercase;}
 .frow input{background:transparent;border:none;border-bottom:1px solid var(--ab2);border-radius:0;padding:5px 0;color:var(--cream);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.08em;outline:none;width:100%;}
@@ -247,7 +247,7 @@ footer{padding:20px 48px;border-top:1px solid var(--dark-border);display:flex;al
   header,.hero,.galsec,.lsidebar,.sbar,footer,.infoband{padding-left:24px;padding-right:24px;}
   .hwm{display:none;}
   .agrid,.agrid.g3{grid-template-columns:1fr;}
-  .prow,.frow{grid-template-columns:1fr 1fr auto;}
+  .prow{grid-template-columns:1fr 1fr auto;} .frow{grid-template-columns:1fr 1fr auto;}
 }
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .hero,.galsec,.lsidebar,.infoband{animation:fadeUp 0.6s ease both;}
@@ -958,9 +958,9 @@ let pricing = [
   {name:'Institutional Project Package (SNGC type)',  cx:'Complex',   rate:'49999'},
 ];
 let files = [
-  {name:'Document_01.svg', size:'2.4 MB', fmt:'SVG', url:''},
-  {name:'Document_02.svg', size:'1.8 MB', fmt:'SVG', url:''},
-  {name:'Document_03.pdf', size:'0.9 MB', fmt:'PDF', url:''},
+  {name:'view1.svg', size:'', fmt:'SVG', url:'https://shakhith-am.github.io/i3d-smartlock/view1.svg'},
+  {name:'Document_02.svg', size:'', fmt:'SVG', url:''},
+  {name:'Document_03.pdf', size:'', fmt:'PDF', url:''},
 ];
 let selectedPkg = null;
 let selectedDtype = 'Architectural Drawings';
@@ -1012,6 +1012,8 @@ function renderFilesAdmin() {
         </select></div>
       <div class="ff"><label>Size</label>
         <input type="text" value="${f.size}" oninput="files[${i}].size=this.value" placeholder="2.4 MB"/></div>
+      <div class="ff"><label>Download URL</label>
+        <input type="text" value="${f.url||''}" oninput="files[${i}].url=this.value" placeholder="https://shakhith-am.github.io/i3d-smartlock/filename.svg"/></div>
       <button class="xbtn" onclick="files.splice(${i},1);renderFilesAdmin()">×</button>`;
     c.appendChild(r);
   });
@@ -1036,7 +1038,12 @@ function launch() {
   document.querySelectorAll('#fileRows .frow').forEach((row,i) => {
     const ins = row.querySelectorAll('input');
     const sels = row.querySelectorAll('select');
-    if(files[i]){ files[i].name=ins[0].value; files[i].size=ins[1].value; if(sels[0]) files[i].fmt=sels[0].value; }
+    if(files[i]){
+      files[i].name = ins[0].value;
+      files[i].size = ins[1].value;
+      files[i].url  = ins[2] ? ins[2].value.trim() : '';
+      if(sels[0]) files[i].fmt = sels[0].value;
+    }
   });
 
   const firm   = g('c_firm')   || 'Your Studio';
@@ -1173,8 +1180,11 @@ function renderDownloads(){
   const c=document.getElementById('p_dllist'); c.innerHTML='';
   files.forEach(f=>{
     if(!f.name) return;
-    const a=document.createElement('a'); a.className='dlbtn'; a.href=f.url||'#';
-    if(f.url) a.target='_blank'; else a.onclick=e=>simulateDL(e,f.name);
+    const a=document.createElement('a'); a.className='dlbtn';
+    const hasUrl = f.url && f.url.startsWith('http');
+    a.href = hasUrl ? f.url : '#';
+    if(hasUrl){ a.setAttribute('download', f.name); a.target='_blank'; }
+    else { a.onclick=e=>simulateDL(e,f.name); }
     a.innerHTML=`<div class="dli"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
       <div>${f.name}<span class="dlmeta">${f.size} · ${f.fmt||'File'}</span></div>`;
     c.appendChild(a);
