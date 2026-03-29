@@ -1021,6 +1021,11 @@ function addFRow(){ files.push({name:'',size:'',fmt:'SVG',url:''}); renderFilesA
 /* ══════════ LAUNCH ══════════ */
 function g(id){ return document.getElementById(id).value.trim(); }
 
+function safeSet(id, val, prop='textContent'){
+  const el = document.getElementById(id);
+  if(el) el[prop] = val;
+}
+
 function launch() {
   // Sync any unsaved typing from admin rows
   document.querySelectorAll('#pricingRows .prow').forEach((row,i) => {
@@ -1055,20 +1060,20 @@ function launch() {
   const words = proj.trim().split(' ');
   const last  = words.pop();
   const rest  = words.join(' ');
-  document.getElementById('p_hwm').textContent  = proj.toUpperCase();
+  safeSet('p_hwm', proj.toUpperCase());
   document.getElementById('p_tag').innerHTML    = `${firm} · ${dtype}`;
   document.getElementById('p_h1').innerHTML     = rest ? `${rest} <em>${last}</em>` : `<em>${last}</em>`;
-  document.getElementById('p_sub').textContent  = sub;
+  safeSet('p_sub', sub);
   document.getElementById('p_dtype').innerHTML  = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> ${dtype}`;
 
   // Meta
-  document.getElementById('m_loc').textContent   = loc;
-  document.getElementById('m_stage').textContent = stage;
-  document.getElementById('m_year').textContent  = year;
-  document.getElementById('m_firm').textContent  = firm;
+  safeSet('m_loc', loc);
+  safeSet('m_stage', stage);
+  safeSet('m_year', year);
+  safeSet('m_firm', firm);
   const cw = document.getElementById('m_client_wrap');
-  if(client){ document.getElementById('m_client').textContent=client; cw.style.display=''; }
-  else cw.style.display='none';
+  const mc = document.getElementById('m_client');
+  if(cw && mc){ if(client){ mc.textContent=client; cw.style.display=''; } else cw.style.display='none'; }
 
   // Watermarks
   for(let i=1;i<=6;i++){
@@ -1086,27 +1091,27 @@ function launch() {
 
   // Status bar
   const fc = files.filter(f=>f.name).length;
-  document.getElementById('p_sbar').textContent = `${fc} file${fc!==1?'s':''} · ${dtype} · SmartLock protected`;
+  safeSet('p_sbar', `${fc} file${fc!==1?'s':''} · ${dtype} · SmartLock protected`);
 
   // Info cells
-  document.getElementById('p_i1').textContent = g('c_i1');
-  document.getElementById('p_i2').textContent = g('c_i2');
-  document.getElementById('p_i3').textContent = g('c_i3');
-  document.getElementById('p_i4').textContent = g('c_i4');
+  safeSet('p_i1', g('c_i1'));
+  safeSet('p_i2', g('c_i2'));
+  safeSet('p_i3', g('c_i3'));
+  safeSet('p_i4', g('c_i4'));
 
   // Footer
   const yr = year || new Date().getFullYear();
-  document.getElementById('p_fleft').textContent  = `© ${yr} ${firm}${web?' · '+web:''}`;
-  document.getElementById('p_fright').textContent = `${ref} · i3d SmartLock v2`;
-  document.getElementById('p_lockweb').textContent= `· ${firm}${web?' · '+web:''}`;
-  document.getElementById('p_dlfoot').textContent = `${firm}${web?' · '+web:''} · Est. ${yr}`;
+  safeSet('p_fleft', `© ${yr} ${firm}${web?' · '+web:''}`);
+  safeSet('p_fright', `${ref} · i3d SmartLock v2`);
+  const plw = document.getElementById('p_lockweb'); if(plw) plw.textContent = `· ${firm}${web?' · '+web:''}`;
+  const pdf = document.getElementById('p_dlfoot'); if(pdf) pdf.textContent = `${firm}${web?' · '+web:''} · Est. ${yr}`;
 
   // UPI
-  document.getElementById('p_upiid').textContent  = upi;
-  document.getElementById('qrlabel').textContent  = firm.slice(0,4);
+  const pupi = document.getElementById('p_upiid'); if(pupi) pupi.textContent = upi;
+  const qrl = document.getElementById('qrlabel'); if(qrl) qrl.textContent = firm.slice(0,4);
 
   // Sidebar lock title
-  document.getElementById('p_lockfooter').querySelector('div:last-child').textContent = `· ${firm}${web?' · '+web:''}`;
+  const plf = document.getElementById('p_lockfooter'); if(plf){ const lc=plf.querySelector('div:last-child'); if(lc) lc.textContent=`· ${firm}${web?' · '+web:''}`; }
 
   // Portal pricing table
   renderPortalPricing();
@@ -1117,8 +1122,8 @@ function launch() {
   document.getElementById('portal').classList.add('on');
   document.getElementById('gearBtn').classList.add('on');
   selectedPkg = null;
-  document.getElementById('sel_name').textContent = '— choose above —';
-  document.getElementById('sel_amt').textContent  = '₹ —';
+  safeSet('sel_name', '— choose above —');
+  safeSet('sel_amt', '₹ —');
   document.getElementById('sel_amt').style.color  = 'var(--gold-dim)';
   // Init Voice AI after portal renders
   setTimeout(()=> initVoiceAI(), 350);
