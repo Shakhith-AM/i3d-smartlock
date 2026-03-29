@@ -1542,13 +1542,22 @@ function buildGreeting(){
   if(VA.customGreeting) return VA.customGreeting;
   const tod = new Date().getHours();
   const time = tod < 12 ? 'Good morning' : tod < 17 ? 'Good afternoon' : 'Good evening';
+  // Use spoken-friendly version of deliverable type
+  const spokenType = VA.ytVideoId
+    ? 'three D animation'
+    : ttsClean(VA.dtype)
+        .replace(/Architectural Drawings/i, 'architectural drawings')
+        .replace(/three D Visuali/i, 'three D animation')
+        .replace(/Interior Design Package/i, 'interior design package')
+        .replace(/Supervision Report/i, 'supervision report');
+
   const styles = {
     'Warm & Professional':
-      `${time}! Welcome to ${VA.firmName}'s secure project portal. I'm ${VA.name}, your design assistant. You're viewing the ${VA.project} ${VA.dtype}. How may I help you today?`,
+      `${time}! Welcome to ${VA.firmName.replace(/i3d/gi,"i three D")}'s secure project portal. I'm ${VA.name}, your design assistant. You're viewing the ${VA.project} ${spokenType}. How may I help you today?`,
     'Friendly & Casual':
-      `Hey there! ${time}! I'm ${VA.name} from ${VA.firmName}. You've landed on the ${VA.project} portal — I can walk you through what's here, the pricing, or help you unlock the drawings. What would you like to know?`,
+      `Hey there! ${time}! I'm ${VA.name} from ${VA.firmName.replace(/i3d/gi,"i three D")}. You've landed on the ${VA.project} portal — I can walk you through what's here, the pricing, or help you unlock the files. What would you like to know?`,
     'Formal & Corporate':
-      `${time}. Welcome to the ${VA.firmName} professional deliverable portal. I am ${VA.name}, your dedicated assistant for the ${VA.project} ${VA.dtype} package. Please let me know how I may assist you.`,
+      `${time}. Welcome to the ${VA.firmName.replace(/i3d/gi,"i three D")} professional deliverable portal. I am ${VA.name}, your dedicated assistant for the ${VA.project} ${spokenType} package. Please let me know how I may assist you.`,
   };
   return styles[VA.greetStyle] || styles['Warm & Professional'];
 }
@@ -1746,8 +1755,8 @@ function speak(text){
   if(!VA.synth) return;
   stopSpeaking();
 
-  // Strip markdown-style formatting for cleaner speech
-  const clean = text.replace(/[*_`#]/g,'').replace(/₹/g,' rupees ').substring(0,400);
+  // Strip markdown and sanitise for natural TTS pronunciation
+  const clean = ttsClean(text.replace(/[*_`#]/g,'')).substring(0,400);
 
   VA.utterance = new SpeechSynthesisUtterance(clean);
   VA.utterance.lang  = 'en-IN';
@@ -1911,6 +1920,32 @@ function genCode(){
   // Flash the field
   field.style.borderColor='var(--ac)';
   setTimeout(()=>field.style.borderColor='',1000);
+}
+
+// ── TTS Text Sanitiser — makes browser voice sound natural ──
+function ttsClean(text){
+  return text
+    .replace(/3D/g, 'three D')
+    .replace(/3d/g, 'three D')
+    .replace(/i3d/gi, 'i three D')
+    .replace(/SmartLock/gi, 'Smart Lock')
+    .replace(/BOQ/g, 'Bill of Quantities')
+    .replace(/MEP/g, 'Mechanical and Electrical')
+    .replace(/GFC/g, 'Good for Construction')
+    .replace(/SVG/gi, 'vector file')
+    .replace(/PDF/gi, 'document')
+    .replace(/DWG/gi, 'drawing file')
+    .replace(/XLSX/gi, 'spreadsheet')
+    .replace(/DOCX/gi, 'document')
+    .replace(/Visualizations/gi, 'Visualisations')
+    .replace(/visualization/gi, 'visualisation')
+    .replace(/UTR/g, 'U T R reference')
+    .replace(/UPI/g, 'U P I')
+    .replace(/GPay/gi, 'Google Pay')
+    .replace(/₹/g, ' rupees ')
+    .replace(/([A-Z]{2,})/g, m => m.split('').join(' ')) // space out acronyms
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 // Pre-load voices as soon as possible
