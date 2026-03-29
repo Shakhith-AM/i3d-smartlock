@@ -1129,6 +1129,8 @@ function launch() {
   document.getElementById('sel_name').textContent = '— choose above —';
   document.getElementById('sel_amt').textContent  = '₹ —';
   document.getElementById('sel_amt').style.color  = 'var(--gold-dim)';
+  // Init Voice AI after portal renders
+  setTimeout(()=> initVoiceAI(), 350);
 }
 
 function reopenAdmin(){
@@ -1241,6 +1243,15 @@ function unlock(){
   document.getElementById('payForm').style.display='block';
   document.getElementById('verifying').style.display='none';
   document.getElementById('lockCard').scrollIntoView({behavior:'smooth',block:'center'});
+  // Voice celebration on unlock
+  setTimeout(()=>{
+    const msg = `Wonderful! Your payment has been verified and your files are now unlocked. You can download them directly from the panel. Thank you for working with ${VA.firmName}!`;
+    if(document.getElementById('vaWrap').style.display !== 'none'){
+      addMessage('assistant', msg);
+      speak(msg);
+      openVA();
+    }
+  }, 1000);
 }
 
 /* ══════════ INIT ══════════ */
@@ -1634,27 +1645,6 @@ function stopListening(){
   const lbl = document.getElementById('vaBtnLabel');
   if(lbl) lbl.textContent = 'Ask '+(VA.name||'Aria');
   try{ if(VA.recognition) VA.recognition.stop(); }catch(e){}
-}
-
-// ── Hook into launch() — add this at end of launch function ──
-// (patched below via override)
-const _originalLaunch = launch;
-function launch(){
-  _originalLaunch();
-  // Read voice config and init after portal is shown
-  setTimeout(()=> initVoiceAI(), 300);
-}
-
-// ── Hook unlock to congratulate ──
-const _origUnlock = unlock;
-function unlock(){
-  _origUnlock();
-  setTimeout(()=>{
-    const msg = `Wonderful! Your payment has been verified and your files are now unlocked. You can download them directly from the panel. Thank you for working with ${VA.firmName}!`;
-    addMessage('assistant', msg);
-    speak(msg);
-    openVA();
-  }, 1000);
 }
 
 // Pre-load voices as soon as possible
