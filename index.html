@@ -20,7 +20,7 @@ body{background:var(--dark);color:var(--cream);font-family:'Cormorant Garamond',
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:999;opacity:0.6;}
 
 /* ── ADMIN PANEL ── */
-#adminPanel{position:fixed;inset:0;background:rgba(5,10,18,0.97);backdrop-filter:blur(16px);z-index:800;overflow-y:auto;display:flex;align-items:flex-start;justify-content:center;padding:40px 20px;}
+#adminPanel{position:fixed;inset:0;background:rgba(5,10,18,0.97);backdrop-filter:blur(16px);z-index:800;overflow-y:auto;display:none;align-items:flex-start;justify-content:center;padding:40px 20px;}
 .ash{width:100%;max-width:820px;background:var(--ab);border:1px solid var(--ab2);border-radius:4px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.7);}
 .ahd{background:linear-gradient(135deg,#0D2035,#102840);border-bottom:1px solid var(--ab2);padding:28px 36px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
 .abr{font-family:'Cinzel',serif;font-size:15px;letter-spacing:0.2em;color:var(--ac);}
@@ -81,6 +81,69 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .launch-note{font-family:'DM Mono',monospace;font-size:9px;color:#2A5A7A;letter-spacing:0.1em;text-align:center;margin-top:10px;line-height:1.8;}
 
 /* Gear */
+/* ── ARCHITECT PASSWORD GATE ── */
+#archGate{
+  position:fixed;inset:0;
+  background:rgba(5,10,18,0.98);
+  backdrop-filter:blur(20px);
+  z-index:1000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:20px;
+}
+#archGate.open{display:flex;}
+.gate-box{
+  background:var(--ab);
+  border:1px solid var(--ab2);
+  border-radius:4px;
+  padding:48px 48px 36px;
+  width:100%;
+  max-width:420px;
+  position:relative;
+  box-shadow:0 32px 80px rgba(0,0,0,0.8);
+}
+.gate-box::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--ac),transparent);
+}
+.gate-title{
+  font-family:'Cinzel',serif;font-size:16px;letter-spacing:0.2em;
+  color:var(--ac);text-align:center;margin-bottom:4px;
+}
+.gate-sub{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.15em;
+  color:#4A7A9B;text-align:center;margin-bottom:28px;text-transform:uppercase;
+}
+.gate-input{
+  width:100%;background:#071525;border:1px solid var(--ab2);
+  border-radius:2px;padding:14px 16px;color:var(--cream);
+  font-family:'DM Mono',monospace;font-size:16px;letter-spacing:0.3em;
+  text-align:center;outline:none;transition:border-color 0.2s;
+  margin-bottom:16px;
+}
+.gate-input:focus{border-color:var(--ac);}
+.gate-input.error{border-color:#8B2020;animation:shake 0.4s ease;}
+.gate-btn{
+  width:100%;padding:14px;
+  background:linear-gradient(135deg,#1A3A5A,#0D2035);
+  border:1px solid rgba(74,158,204,0.4);border-radius:2px;
+  color:var(--ac);font-family:'Cinzel',serif;font-size:12px;
+  letter-spacing:0.2em;cursor:pointer;transition:all 0.3s;
+}
+.gate-btn:hover{box-shadow:0 0 20px rgba(74,158,204,0.3);transform:translateY(-1px);}
+.gate-hint{
+  font-family:'DM Mono',monospace;font-size:9px;color:#2A4A6A;
+  letter-spacing:0.12em;text-align:center;margin-top:12px;line-height:1.8;
+}
+.gate-close{
+  position:absolute;top:16px;right:16px;background:none;border:none;
+  color:#2A4A6A;cursor:pointer;font-size:18px;padding:4px 8px;
+  transition:color 0.2s;
+}
+.gate-close:hover{color:var(--ac);}
+
 #gearBtn{position:fixed;bottom:24px;right:24px;width:44px;height:44px;background:var(--dark-card);border:1px solid var(--dark-border);border-radius:50%;display:none;align-items:center;justify-content:center;cursor:pointer;z-index:700;color:var(--gold-dim);transition:all 0.2s;}
 #gearBtn:hover{border-color:var(--gold-dim);color:var(--gold);}
 #gearBtn.on{display:flex;}
@@ -258,6 +321,28 @@ footer{padding:20px 48px;border-top:1px solid var(--dark-border);display:flex;al
 <body>
 
 <!-- ═══════════════ ADMIN PANEL ═══════════════ -->
+<!-- ═══════════════ ARCHITECT PASSWORD GATE ═══════════════ -->
+<div id="archGate">
+ <div class="gate-box">
+  <button class="gate-close" onclick="closeGate()">×</button>
+  <div class="gate-title">Architect Access</div>
+  <div class="gate-sub">i3d SmartLock · Setup Panel</div>
+  <input class="gate-input" id="gateInput" type="password"
+   placeholder="••••••••"
+   maxlength="30"
+   onkeydown="if(event.key==='Enter') checkGatePassword()"
+   autocomplete="off"/>
+  <button class="gate-btn" onclick="checkGatePassword()">
+   Enter Setup Panel
+  </button>
+  <div class="gate-hint">
+   Press Ctrl+Shift+A anytime to access this panel<br>
+   Default password: <span style="color:var(--ac);letter-spacing:0.2em;">i3d2026</span><br>
+   Change it inside the setup panel after first login
+  </div>
+ </div>
+</div>
+
 <div id="adminPanel">
  <div class="ash">
   <div class="ahd">
@@ -397,6 +482,9 @@ footer{padding:20px 48px;border-top:1px solid var(--dark-border);display:flex;al
      <div class="af" id="va_keyfield" style="display:none"><label>Voice API Key</label><input id="c_vakey" placeholder="Paste ElevenLabs or Google API key" type="password"/></div>
      <div class="af"><label>Anthropic Key (AI conversation brain)</label><input id="c_anthropickey" placeholder="sk-ant-api03-... for intelligent replies" type="password"/></div>
      <div class="af"><label>Master Unlock Code (your private code — never share)</label><input id="c_mastercode" placeholder="e.g. i3D2026architect" type="password"/></div>
+     <div class="af"><label>Admin Panel Password (change from default i3d2026)</label><input id="c_adminpwd" placeholder="Set your own admin password" type="password"/>
+      <div style="font-family:'DM Mono',monospace;font-size:8px;color:#2A5A7A;letter-spacing:0.1em;margin-top:4px;">This password protects the setup panel · Press Ctrl+Shift+A to open</div>
+     </div>
      <div class="af">
       <label>Active Client Codes (comma separated — WhatsApp to clients after GPay confirmed)
         <button onclick="genCode()" style="margin-left:8px;font-family:'DM Mono',monospace;font-size:8px;background:rgba(74,158,204,0.15);border:1px solid rgba(74,158,204,0.3);color:var(--ac);padding:2px 8px;border-radius:2px;cursor:pointer;letter-spacing:0.1em;">+ GENERATE</button>
@@ -483,7 +571,21 @@ footer{padding:20px 48px;border-top:1px solid var(--dark-border);display:flex;al
   </button>
  </div>
 
- <div class="main">
+ <!-- Holding screen — shown before architect configures -->
+<div id="holdingMsg" style="display:none;position:fixed;inset:0;background:var(--dark);z-index:200;flex-direction:column;align-items:center;justify-content:center;gap:24px;">
+ <div style="font-family:'Cinzel',serif;font-size:32px;letter-spacing:0.15em;color:var(--gold);">i3d SmartLock</div>
+ <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;color:var(--gold-dim);text-transform:uppercase;">Professional Deliverable Gateway</div>
+ <div style="width:48px;height:1px;background:var(--gold-dim);"></div>
+ <div style="font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--cream-dim);font-style:italic;text-align:center;max-width:400px;line-height:1.8;">
+  This portal is not yet configured.<br>
+  If you are the architect, press <span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--gold);font-style:normal;">Ctrl+Shift+A</span> to access the setup panel.
+ </div>
+ <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--gold-dim);letter-spacing:0.15em;text-align:center;margin-top:8px;">
+  If you received this link from your architect,<br>please ask them to send you the configured portal link.
+ </div>
+</div>
+
+<div class="main">
 
   <!-- VIDEO PREVIEW (shown when YouTube ID is set) -->
   <div id="videoPreviewSection" style="display:none;">
@@ -1475,6 +1577,9 @@ function safeSet(id, val, prop='textContent'){
 }
 
 function launch() {
+  // Save custom admin password if set
+  const newPwd = (document.getElementById('c_adminpwd')||{value:''}).value.trim();
+  if(newPwd && newPwd.length >= 4) _adminPassword = newPwd;
   // Sync any unsaved typing from admin rows
   document.querySelectorAll('#pricingRows .prow').forEach((row,i) => {
     const ins = row.querySelectorAll('input');
@@ -1592,13 +1697,16 @@ function launch() {
   document.getElementById('sel_amt').style.color  = 'var(--gold-dim)';
   // Store video ID globally
   window._portalYTID = ytid || '';
+  // Hide holding screen — portal is now configured
+  const hm = document.getElementById('holdingMsg');
+  if(hm) hm.style.display = 'none';
   // Init Voice AI after portal renders
   setTimeout(()=> initVoiceAI(), 350);
 }
 
 function reopenAdmin(){
-  document.getElementById('adminPanel').style.display='flex';
-  document.getElementById('adminPanel').scrollTop=0;
+  // Open gate first for security
+  openGate();
 }
 
 /* ══════════ PORTAL — PRICING TABLE ══════════ */
@@ -1815,7 +1923,24 @@ document.addEventListener('DOMContentLoaded',()=>{
   renderFilesAdmin();
   document.getElementById('payModal').addEventListener('click',function(e){ if(e.target===this) closePay(); });
   document.getElementById('lbox').addEventListener('click',function(e){ if(e.target===this) closeLB(); });
+  document.getElementById('agreementOverlay').addEventListener('click',function(e){ if(e.target===this) closeAgreement(); });
+
+  // On fresh load — show a "not yet configured" landing state
+  // Admin panel stays hidden until Ctrl+Shift+A + password
+  // Portal shows a clean holding screen
+  showHoldingScreen();
 });
+
+function showHoldingScreen(){
+  // Show portal shell with a holding message
+  document.getElementById('portal').classList.add('on');
+  // Update header to show firm defaults
+  const logo = document.getElementById('p_logo');
+  if(logo) logo.innerHTML = 'i3d Studio<span>Architectural Intelligence · Est. 1999 · Coimbatore</span>';
+  // Show a "configuring" overlay inside the main area
+  const holding = document.getElementById('holdingMsg');
+  if(holding) holding.style.display = 'flex';
+}
 
 /* ══════════════════════════════════════════════════
    VOICE AI ENGINE — Aria / SmartLock Assistant
@@ -2513,6 +2638,61 @@ document.addEventListener('DOMContentLoaded',()=>{
   const ao = document.getElementById('agreementOverlay');
   if(ao) ao.addEventListener('click', e=>{ if(e.target===ao) closeAgreement(); });
 });
+
+/* ══════════════════════════════════════
+   ARCHITECT GATE — Password Protection
+══════════════════════════════════════ */
+
+let _adminPassword = 'i3d2026'; // default — change in setup panel
+
+function openGate(){
+  document.getElementById('archGate').classList.add('open');
+  setTimeout(()=> document.getElementById('gateInput').focus(), 100);
+}
+function closeGate(){
+  document.getElementById('archGate').classList.remove('open');
+  document.getElementById('gateInput').value = '';
+}
+function checkGatePassword(){
+  const input = document.getElementById('gateInput');
+  const entered = input.value.trim();
+
+  // Check against current password
+  if(entered === _adminPassword){
+    closeGate();
+    // Open admin panel
+    document.getElementById('adminPanel').style.display = 'flex';
+    document.getElementById('adminPanel').scrollTop = 0;
+    // Hide portal if showing
+    document.getElementById('portal').classList.remove('on');
+    document.getElementById('gearBtn').classList.remove('on');
+    document.getElementById('vaWrap').style.display = 'none';
+  } else {
+    input.classList.add('error');
+    input.value = '';
+    setTimeout(()=> input.classList.remove('error'), 500);
+    input.placeholder = 'Wrong password — try again';
+    setTimeout(()=> input.placeholder = '••••••••', 2000);
+  }
+}
+
+// Keyboard shortcut — Ctrl+Shift+A opens gate
+document.addEventListener('keydown', e => {
+  if(e.ctrlKey && e.shiftKey && e.key === 'A'){
+    e.preventDefault();
+    // If admin panel already open — close it
+    if(document.getElementById('adminPanel').style.display === 'flex'){
+      document.getElementById('adminPanel').style.display = 'none';
+      return;
+    }
+    openGate();
+  }
+  // Escape closes gate
+  if(e.key === 'Escape') closeGate();
+});
+
+// On page load — show portal directly if previously launched
+// (portal shows by default, admin is hidden)
 
 // Pre-load voices as soon as possible
 if(window.speechSynthesis){
