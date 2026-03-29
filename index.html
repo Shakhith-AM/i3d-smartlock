@@ -13,18 +13,18 @@ const BAKED_CONFIG = {
   "web": "i3dstudio.in",
   "upi": "shakhith-1@okicici",
   "proj": "Antony residence",
-  "ref": "i3D/2026/001",
+  "ref": "i3D/2026/003",
   "loc": "Coimbatore, Tamil Nadu",
   "client": "",
   "stage": "Design Development",
   "year": "2026",
   "sub": "Comprehensive architectural drawings and 3D visualizations — SmartLock protected",
   "ytid": "",
-  "dtype": "3D Visualizations",
+  "dtype": "Architectural Drawings",
   "i1": "A residential villa project encompassing complete architectural drawings, 3D visualizations, and design documentation prepared by i3d Studio, Coimbatore.",
-  "i2": "Climatically responsive design with considered spatial planning, natural light strategy, and material palette suited to the region.",
-  "i3": "All drawings are in print-ready vector format. Files are delivered digitally upon payment verification via SmartLock.",
-  "i4": "Prepared by i3d Studio, Coimbatore. 25+ years of architectural practice across residential, commercial and institutional projects.",
+  "i2": "",
+  "i3": "",
+  "i4": "",
   "vaname": "Aria",
   "vagreet": "Warm & Professional",
   "vagender": "female",
@@ -32,19 +32,19 @@ const BAKED_CONFIG = {
   "vakey": "",
   "vagreeting": "",
   "mastercode": "",
-  "clientcodes": "YKVR2P",
+  "clientcodes": "KKDQCP",
   "pricing": [
     {
-      "name": "3D Exterior Render — Single View",
+      "name": "Concept / Schematic Plan (1 floor)",
       "cx": "Standard",
-      "rate": "2999"
+      "rate": "1999"
     }
   ],
   "files": [
     {
-      "name": "view.1",
+      "name": "Document_01.svg",
       "size": "2.4 MB",
-      "fmt": "Other",
+      "fmt": "SVG",
       "url": ""
     }
   ]
@@ -207,18 +207,18 @@ header{display:flex;align-items:center;justify-content:space-between;padding:24p
 .hwm{position:absolute;right:-20px;top:50%;transform:translateY(-50%) rotate(90deg);font-family:'Cinzel',serif;font-size:80px;font-weight:600;color:rgba(201,168,76,0.04);letter-spacing:0.3em;pointer-events:none;white-space:nowrap;}
 .ptag{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:0.25em;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:12px;}
 .ptag::before{content:'';display:inline-block;width:32px;height:1px;background:var(--gold);}
-h1{font-family:'Cinzel',serif;font-size:clamp(28px,5vw,54px);font-weight:400;letter-spacing:0.08em;color:var(--cream);line-height:1.15;}
+h1{font-family:'Cinzel',serif;font-size:clamp(32px,5vw,60px);font-weight:400;letter-spacing:0.08em;color:var(--cream);line-height:1.15;}
 h1 em{color:var(--gold);font-style:italic;font-family:'Cormorant Garamond',serif;font-size:1.1em;}
-.hsub{margin-top:16px;font-size:15px;color:var(--cream-dim);font-style:italic;font-weight:300;letter-spacing:0.04em;}
+.hsub{margin-top:16px;font-size:17px;color:var(--cream-dim);font-style:italic;font-weight:300;letter-spacing:0.04em;}
 
 /* Deliverable type badge on hero */
 .dtype-badge{display:inline-flex;align-items:center;gap:8px;margin-top:18px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);padding:6px 14px;border-radius:2px;}
 
 .mrow{display:flex;gap:40px;margin-top:28px;flex-wrap:wrap;}
-.mi label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;color:var(--gold-dim);text-transform:uppercase;display:block;margin-bottom:4px;}
-.mi span{font-size:14px;color:var(--cream);font-weight:300;letter-spacing:0.05em;}
+.mi label{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;color:var(--gold-dim);text-transform:uppercase;display:block;margin-bottom:4px;}
+.mi span{font-size:16px;color:var(--cream);font-weight:300;letter-spacing:0.05em;}
 
-.sbar{background:var(--dark-surface);border-bottom:1px solid var(--dark-border);padding:10px 48px;display:flex;align-items:center;justify-content:space-between;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.12em;color:var(--gold-dim);gap:16px;flex-wrap:wrap;}
+.sbar{background:var(--dark-surface);border-bottom:1px solid var(--dark-border);padding:10px 48px;display:flex;align-items:center;justify-content:space-between;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:0.1em;color:var(--gold-dim);gap:16px;flex-wrap:wrap;}
 .sdot{display:inline-flex;align-items:center;gap:6px;color:var(--cream-dim);}
 .dot{width:6px;height:6px;border-radius:50%;background:#4CAF50;box-shadow:0 0 6px rgba(76,175,80,0.6);animation:pulse 2s infinite;}
 .dot.am{background:#FFC107;box-shadow:0 0 6px rgba(255,193,7,0.6);}
@@ -228,7 +228,7 @@ h1 em{color:var(--gold);font-style:italic;font-family:'Cormorant Garamond',serif
 
 /* Gallery */
 .galsec{padding:48px;border-right:1px solid var(--dark-border);}
-.slabel{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:24px;display:flex;align-items:center;gap:12px;}
+.slabel{font-family:'DM Mono',monospace;font-size:12px;letter-spacing:0.15em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:24px;display:flex;align-items:center;gap:12px;}
 .slabel::after{content:'';flex:1;height:1px;background:var(--dark-border);}
 .gtabs{display:flex;margin-bottom:32px;border-bottom:1px solid var(--dark-border);}
 .gtab{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.15em;color:var(--gold-dim);padding:10px 20px;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.25s;text-transform:uppercase;background:none;border-top:none;border-left:none;border-right:none;}
@@ -255,23 +255,23 @@ h1 em{color:var(--gold);font-style:italic;font-family:'Cormorant Garamond',serif
 .lcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0.6;}
 .liwrap{width:64px;height:64px;border-radius:50%;background:var(--red-glow);border:1px solid rgba(139,32,32,0.5);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;transition:all 0.5s;}
 .liwrap.open{background:var(--green-glow);border-color:rgba(42,107,58,0.5);}
-.ltitle{font-family:'Cinzel',serif;font-size:14px;letter-spacing:0.15em;color:var(--cream);text-align:center;margin-bottom:6px;}
+.ltitle{font-family:'Cinzel',serif;font-size:16px;letter-spacing:0.15em;color:var(--cream);text-align:center;margin-bottom:6px;}
 .lsub{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.15em;color:var(--gold-dim);text-align:center;text-transform:uppercase;margin-bottom:22px;}
 
 /* Pricing table */
 .pthint{font-family:'DM Mono',monospace;font-size:8px;color:var(--gold-dim);text-align:center;margin-bottom:8px;letter-spacing:0.1em;}
 .ptable{border:1px solid var(--dark-border);border-radius:2px;margin-bottom:18px;overflow:hidden;}
-.pthdr{display:grid;grid-template-columns:2fr 1fr 1fr;background:var(--dark-surface);border-bottom:1px solid var(--dark-border);padding:8px 14px;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:0.15em;color:var(--gold-dim);text-transform:uppercase;}
+.pthdr{display:grid;grid-template-columns:2fr 1fr 1fr;background:var(--dark-surface);border-bottom:1px solid var(--dark-border);padding:8px 14px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.12em;color:var(--gold-dim);text-transform:uppercase;}
 .ptrow{display:grid;grid-template-columns:2fr 1fr 1fr;padding:11px 14px;border-bottom:1px solid var(--dark-border);align-items:center;cursor:pointer;transition:background 0.2s;}
 .ptrow:last-child{border-bottom:none;}
 .ptrow:hover{background:rgba(201,168,76,0.04);}
 .ptrow.sel{background:rgba(201,168,76,0.07);border-left:2px solid var(--gold);}
-.ptname{font-size:13px;color:var(--cream);font-weight:300;letter-spacing:0.03em;}
+.ptname{font-size:15px;color:var(--cream);font-weight:300;letter-spacing:0.03em;}
 .ptcx{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:0.1em;padding:2px 6px;border-radius:2px;display:inline-block;}
 .cx-s{background:rgba(74,158,204,0.1);color:#4A9ECC;border:1px solid rgba(74,158,204,0.2);}
 .cx-d{background:rgba(201,168,76,0.1);color:var(--gold);border:1px solid rgba(201,168,76,0.2);}
 .cx-c{background:rgba(139,32,32,0.12);color:#CC4444;border:1px solid rgba(139,32,32,0.2);}
-.ptamt{font-family:'Cinzel',serif;font-size:15px;color:var(--gold);text-align:right;}
+.ptamt{font-family:'Cinzel',serif;font-size:17px;color:var(--gold);text-align:right;}
 
 .selblock{background:var(--dark-surface);border:1px solid var(--dark-border);border-radius:2px;padding:14px 16px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;}
 .sellabel{font-family:'DM Mono',monospace;font-size:9px;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase;}
@@ -281,12 +281,12 @@ h1 em{color:var(--gold);font-style:italic;font-family:'Cormorant Garamond',serif
 
 /* File list */
 .flist{border:1px solid var(--dark-border);border-radius:2px;margin-bottom:22px;overflow:hidden;}
-.fitem{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--dark-border);font-family:'DM Mono',monospace;font-size:10px;color:var(--cream-dim);letter-spacing:0.1em;}
+.fitem{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--dark-border);font-family:'DM Mono',monospace;font-size:12px;color:var(--cream-dim);letter-spacing:0.1em;}
 .fitem:last-child{border-bottom:none;}
 .ficon{width:22px;height:22px;background:var(--dark-border);border-radius:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:7px;color:var(--gold-dim);text-transform:uppercase;}
 .fsize{margin-left:auto;color:var(--gold-dim);font-size:9px;}
 
-.paybtn{width:100%;padding:16px;background:linear-gradient(135deg,#1A4A28,#2A6B3A);border:1px solid rgba(42,107,58,0.6);border-radius:2px;color:#7BF09C;font-family:'Cinzel',serif;font-size:12px;letter-spacing:0.2em;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;justify-content:center;gap:10px;position:relative;overflow:hidden;}
+.paybtn{width:100%;padding:18px;background:linear-gradient(135deg,#1A4A28,#2A6B3A);border:1px solid rgba(42,107,58,0.6);border-radius:2px;color:#7BF09C;font-family:'Cinzel',serif;font-size:14px;letter-spacing:0.15em;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;justify-content:center;gap:10px;position:relative;overflow:hidden;}
 .paybtn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent,rgba(255,255,255,0.05),transparent);transform:translateX(-100%);transition:transform 0.5s;}
 .paybtn:hover::before{transform:translateX(100%);}
 .paybtn:hover{background:linear-gradient(135deg,#1E5C32,#33845A);box-shadow:0 0 24px rgba(42,107,58,0.4);transform:translateY(-1px);}
@@ -308,9 +308,9 @@ h1 em{color:var(--gold);font-style:italic;font-family:'Cormorant Garamond',serif
 
 /* Info + Footer */
 .infoband{padding:28px 48px;border-top:1px solid var(--dark-border);display:grid;grid-template-columns:repeat(4,1fr);gap:24px;background:var(--dark-surface);}
-.icell label{font-family:'DM Mono',monospace;font-size:9px;color:var(--gold-dim);letter-spacing:0.2em;text-transform:uppercase;display:block;margin-bottom:6px;}
-.icell p{font-size:13px;color:var(--cream-dim);font-weight:300;letter-spacing:0.03em;line-height:1.6;}
-footer{padding:20px 48px;border-top:1px solid var(--dark-border);display:flex;align-items:center;justify-content:space-between;font-family:'DM Mono',monospace;font-size:9px;color:var(--gold-dim);letter-spacing:0.12em;}
+.icell label{font-family:'DM Mono',monospace;font-size:11px;color:var(--gold-dim);letter-spacing:0.2em;text-transform:uppercase;display:block;margin-bottom:6px;}
+.icell p{font-size:15px;color:var(--cream-dim);font-weight:300;letter-spacing:0.03em;line-height:1.6;}
+footer{padding:20px 48px;border-top:1px solid var(--dark-border);display:flex;align-items:center;justify-content:space-between;font-family:'DM Mono',monospace;font-size:11px;color:var(--gold-dim);letter-spacing:0.1em;}
 
 /* Modal */
 .moverlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;}
@@ -1125,7 +1125,7 @@ footer{padding:20px 48px;border-top:1px solid var(--dark-border);display:flex;al
    </div>
   </div>
   <div id="verifying" style="display:none;text-align:center;padding:20px 0;">
-   <div style="font-family:'Cinzel',serif;font-size:14px;color:var(--cream);margin-bottom:12px;letter-spacing:0.1em;">Verifying…</div>
+   <div style="font-family:'Cinzel',serif;font-size:16px;color:var(--cream);margin-bottom:12px;letter-spacing:0.1em;">Verifying…</div>
    <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--gold-dim);letter-spacing:0.12em;">Please wait a moment</div>
   </div>
  </div>
@@ -1147,18 +1147,18 @@ const BAKED_CONFIG = {
   "web": "i3dstudio.in",
   "upi": "shakhith-1@okicici",
   "proj": "Antony residence",
-  "ref": "i3D/2026/001",
+  "ref": "i3D/2026/003",
   "loc": "Coimbatore, Tamil Nadu",
   "client": "",
   "stage": "Design Development",
   "year": "2026",
   "sub": "Comprehensive architectural drawings and 3D visualizations — SmartLock protected",
   "ytid": "",
-  "dtype": "3D Visualizations",
+  "dtype": "Architectural Drawings",
   "i1": "A residential villa project encompassing complete architectural drawings, 3D visualizations, and design documentation prepared by i3d Studio, Coimbatore.",
-  "i2": "Climatically responsive design with considered spatial planning, natural light strategy, and material palette suited to the region.",
-  "i3": "All drawings are in print-ready vector format. Files are delivered digitally upon payment verification via SmartLock.",
-  "i4": "Prepared by i3d Studio, Coimbatore. 25+ years of architectural practice across residential, commercial and institutional projects.",
+  "i2": "",
+  "i3": "",
+  "i4": "",
   "vaname": "Aria",
   "vagreet": "Warm & Professional",
   "vagender": "female",
@@ -1166,19 +1166,19 @@ const BAKED_CONFIG = {
   "vakey": "",
   "vagreeting": "",
   "mastercode": "",
-  "clientcodes": "YKVR2P",
+  "clientcodes": "KKDQCP",
   "pricing": [
     {
-      "name": "3D Exterior Render — Single View",
+      "name": "Concept / Schematic Plan (1 floor)",
       "cx": "Standard",
-      "rate": "2999"
+      "rate": "1999"
     }
   ],
   "files": [
     {
-      "name": "view.1",
+      "name": "Document_01.svg",
       "size": "2.4 MB",
-      "fmt": "Other",
+      "fmt": "SVG",
       "url": ""
     }
   ]
@@ -1225,22 +1225,23 @@ function toggleVoiceKey(val){
 
 // ── Called from launch() — init VA with admin settings ──
 function initVoiceAI(){
-  VA.name         = (document.getElementById('c_vaname').value||'Aria').trim();
-  VA.engine       = document.getElementById('c_vaengine').value;
-  VA.apiKey       = document.getElementById('c_vakey').value.trim();
-  VA.anthropicKey = document.getElementById('c_anthropickey').value.trim();
-  VA.autoGreet    = document.getElementById('c_vaauto').value === 'yes';
-  VA.greetStyle   = document.getElementById('c_vagreet').value;
-  VA.customGreeting = document.getElementById('c_vagreeting').value.trim();
-  VA.gender       = document.getElementById('c_vagender').value;
-  VA.masterCode   = (document.getElementById('c_mastercode').value||'').trim();
-  VA.clientCodes  = (document.getElementById('c_clientcodes').value||'')
-                      .split(',').map(c=>c.trim()).filter(c=>c.length>0);
-  VA.firmName     = (document.getElementById('c_firm').value||'i3d Studio').trim();
-  VA.project      = (document.getElementById('c_proj').value||'Project').trim();
-  VA.dtype        = selectedDtype;
-  VA.location     = (document.getElementById('c_loc').value||'').trim();
-  VA.history      = [];
+  // In baked portal, VA is already populated from BAKED_CONFIG
+  // Only read from DOM if admin elements exist (setup mode)
+  const getVal = (id,def='') => { const el=document.getElementById(id); return el ? el.value.trim() : def; };
+  if(document.getElementById('c_vaname')) VA.name = getVal('c_vaname','Aria');
+  if(document.getElementById('c_vaengine')) VA.engine = getVal('c_vaengine','browser');
+  if(document.getElementById('c_vakey')) VA.apiKey = getVal('c_vakey','');
+  if(document.getElementById('c_anthropickey')) VA.anthropicKey = getVal('c_anthropickey','');
+  if(document.getElementById('c_vaauto')) VA.autoGreet = getVal('c_vaauto','yes') === 'yes';
+  if(document.getElementById('c_vagreet')) VA.greetStyle = getVal('c_vagreet','Warm & Professional');
+  if(document.getElementById('c_vagreeting')) VA.customGreeting = getVal('c_vagreeting','');
+  if(document.getElementById('c_vagender')) VA.gender = getVal('c_vagender','female');
+  if(document.getElementById('c_mastercode')) VA.masterCode = getVal('c_mastercode','');
+  if(document.getElementById('c_clientcodes')) VA.clientCodes = getVal('c_clientcodes','').split(',').map(c=>c.trim()).filter(c=>c.length>0);
+  if(document.getElementById('c_firm')) VA.firmName = getVal('c_firm','i3d Studio');
+  if(document.getElementById('c_proj')) VA.project = getVal('c_proj','Project');
+  if(document.getElementById('c_loc')) VA.location = getVal('c_loc','');
+  VA.history = [];
 
   // Update UI labels
   document.getElementById('vaName').textContent   = VA.name;
@@ -1876,9 +1877,152 @@ function printAgreement(){
 
 // Close on overlay click
 document.addEventListener('DOMContentLoaded',()=>{
+  // Agreement overlay
   const ao = document.getElementById('agreementOverlay');
   if(ao) ao.addEventListener('click', e=>{ if(e.target===ao) closeAgreement(); });
+  document.getElementById('payModal').addEventListener('click',function(e){ if(e.target===this) closePay(); });
+  document.getElementById('lbox').addEventListener('click',function(e){ if(e.target===this) closeLB(); });
+
+  // Pre-load voices
+  if(window.speechSynthesis){
+    window.speechSynthesis.getVoices();
+    window.speechSynthesis.onvoiceschanged = ()=> window.speechSynthesis.getVoices();
+  }
+
+  // AUTO LAUNCH from BAKED_CONFIG
+  if(typeof BAKED_CONFIG !== 'undefined'){
+    const C = BAKED_CONFIG;
+    pricing = C.pricing || [];
+    files   = C.files   || [];
+    selectedDtype = C.dtype || 'Architectural Drawings';
+    window._portalYTID = C.ytid || '';
+
+    // Update VA settings
+    VA.name          = C.vaname    || 'Aria';
+    VA.anthropicKey  = C.vakey     || '';
+    VA.autoGreet     = C.vaauto    === 'yes';
+    VA.greetStyle    = C.vagreet   || 'Warm & Professional';
+    VA.customGreeting= C.vagreeting|| '';
+    VA.gender        = C.vagender  || 'female';
+    VA.masterCode    = C.mastercode|| '';
+    VA.clientCodes   = (C.clientcodes||'').split(',').map(x=>x.trim()).filter(x=>x);
+    VA.firmName      = C.firm      || 'i3d Studio';
+    VA.project       = C.proj      || 'Project';
+    VA.dtype         = C.dtype     || 'Architectural Drawings';
+    VA.ytVideoId     = C.ytid      || '';
+
+    applyBakedConfig(C);
+    setTimeout(()=>{ initVoiceAI(); }, 400);
+  }
 });
+
+function applyBakedConfig(C){
+  function safeSet(id,val,prop='textContent'){
+    const el=document.getElementById(id); if(el) el[prop]=val;
+  }
+
+  const firm  = C.firm  || 'i3d Studio';
+  const tag   = C.tag   || '';
+  const web   = C.web   || '';
+  const upi   = C.upi   || '';
+  const proj  = C.proj  || 'Project';
+  const ref   = C.ref   || 'REF/001';
+  const loc   = C.loc   || '';
+  const client= C.client|| '';
+  const stage = C.stage || '';
+  const year  = C.year  || '2026';
+  const sub   = C.sub   || '';
+  const ytid  = C.ytid  || '';
+  const dtype = C.dtype || 'Architectural Drawings';
+
+  // Header
+  const logo = document.getElementById('p_logo');
+  if(logo) logo.innerHTML = firm + '<span>' + tag + '</span>';
+  safeSet('p_ref', 'PROJECT ARCHIVE
+' + ref);
+
+  // Hero
+  const words = proj.trim().split(' ');
+  const last  = words.pop();
+  const rest  = words.join(' ');
+  safeSet('p_hwm', proj.toUpperCase());
+  const tagEl = document.getElementById('p_tag');
+  if(tagEl) tagEl.innerHTML = firm + ' · ' + dtype;
+  const h1 = document.getElementById('p_h1');
+  if(h1) h1.innerHTML = rest ? rest + ' <em>' + last + '</em>' : '<em>' + last + '</em>';
+  safeSet('p_sub', sub);
+
+  // Deliverable type badge
+  const dtypeEl = document.getElementById('p_dtype');
+  if(dtypeEl){
+    const icon = ytid
+      ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>'
+      : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+    dtypeEl.innerHTML = icon + ' ' + (ytid ? '3D Animation · Video Delivery' : dtype);
+  }
+
+  // Meta row
+  safeSet('m_loc',   loc);
+  safeSet('m_stage', stage);
+  safeSet('m_year',  year);
+  safeSet('m_firm',  firm);
+  const cw = document.getElementById('m_client_wrap');
+  const mc = document.getElementById('m_client');
+  if(cw && mc){ if(client){ mc.textContent=client; cw.style.display=''; } else cw.style.display='none'; }
+
+  // Watermarks
+  for(let i=1;i<=7;i++){ const el=document.getElementById('wm'+i); if(el) el.textContent=firm+' — Confidential'; }
+
+  // Tab labels
+  const tabA = dtype.includes('3D')||dtype.includes('Visual') ? '3D Views' :
+               dtype.includes('Estimate')||dtype.includes('BOQ') ? 'Summary' : 'Set A';
+  const tabB = dtype.includes('3D')||dtype.includes('Visual') ? 'Elevations' :
+               dtype.includes('Estimate')||dtype.includes('BOQ') ? 'Details' : 'Set B';
+  const tabs = document.querySelectorAll('.gtab');
+  if(tabs[0]) tabs[0].textContent = tabA;
+  if(tabs[1]) tabs[1].textContent = tabB;
+
+  // Status bar
+  const fc = (C.files||[]).filter(f=>f.name).length;
+  safeSet('p_sbar', fc + ' file' + (fc!==1?'s':'') + ' · ' + dtype + ' · SmartLock protected');
+
+  // Info cells
+  safeSet('p_i1', C.i1||'');
+  safeSet('p_i2', C.i2||'');
+  safeSet('p_i3', C.i3||'');
+  safeSet('p_i4', C.i4||'');
+
+  // Footer
+  safeSet('p_fleft', '© ' + year + ' ' + firm + (web?' · '+web:''));
+  safeSet('p_fright', ref + ' · i3d SmartLock v2');
+  const plw = document.getElementById('p_lockweb');
+  if(plw) plw.textContent = '· ' + firm + (web?' · '+web:'');
+  const pdf = document.getElementById('p_dlfoot');
+  if(pdf) pdf.textContent = firm + (web?' · '+web:'') + ' · Est. ' + year;
+
+  // UPI
+  const pupi = document.getElementById('p_upiid');
+  if(pupi) pupi.textContent = upi;
+  const cpn = document.querySelector('.cpynote');
+  if(cpn) cpn.textContent = '⊕ tap to copy · ' + upi;
+
+  // Video section
+  if(ytid){
+    const vs = document.getElementById('videoPreviewSection');
+    if(vs) vs.style.display = 'block';
+    const thumb = document.getElementById('ytThumb');
+    if(thumb) thumb.style.backgroundImage = 'url(https://img.youtube.com/vi/'+ytid+'/maxresdefault.jpg)';
+    const lbl = document.getElementById('videoProjectLabel');
+    if(lbl) lbl.textContent = firm + ' · 3D Animation';
+  }
+
+  // Render pricing and files
+  renderPortalPricing();
+  renderPortalFiles();
+
+  // Show portal
+  document.getElementById('portal').classList.add('on');
+}
 
 /* ══════════════════════════════════════
    ARCHITECT GATE — Password Protection
