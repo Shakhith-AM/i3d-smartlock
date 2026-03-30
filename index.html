@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>i3d SmartLock</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Cinzel:wght@400;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#C9A84C;--gold-dim:#7A6130;--cream:#F5EDD8;--cream-dim:#BEB49A;--dark:#0D0B08;--ds:#1A1710;--dc:#221E17;--db:#2E2820;--rg:rgba(139,32,32,0.25);--green:#2A6B3A;--gg:rgba(42,107,58,0.25);--ab:#0A1A2A;--ab2:#1A3A5A;--ac:#4A9ECC;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--dark);color:var(--cream);font-family:'Cormorant Garamond',serif;min-height:100vh;overflow-x:hidden;}
+.ribbon{display:none;background:linear-gradient(90deg,var(--green),#1A5C2A);padding:10px 48px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.15em;color:#7BF09C;text-align:center;}
+.ribbon.on{display:block;}
+header{display:flex;align-items:center;justify-content:space-between;padding:22px 48px;border-bottom:1px solid var(--db);background:rgba(13,11,8,.96);position:sticky;top:0;z-index:100;backdrop-filter:blur(12px);}
+.logo{font-family:'Cinzel',serif;font-size:17px;letter-spacing:.2em;color:var(--gold);}
+.logo span{color:var(--cream-dim);font-size:10px;font-family:'DM Mono',monospace;letter-spacing:.15em;display:block;margin-top:2px;}
+.hmeta{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold-dim);letter-spacing:.1em;text-align:right;white-space:pre-line;}
+.hero{padding:60px 48px 36px;border-bottom:1px solid var(--db);position:relative;overflow:hidden;}
+.hwm{position:absolute;right:-20px;top:50%;transform:translateY(-50%) rotate(90deg);font-family:'Cinzel',serif;font-size:90px;font-weight:600;color:rgba(201,168,76,.04);letter-spacing:.3em;pointer-events:none;white-space:nowrap;}
+.ptag{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.ptag::before{content:'';display:inline-block;width:28px;height:1px;background:var(--gold);}
+h1{font-family:'Cinzel',serif;font-size:clamp(30px,5vw,58px);font-weight:400;letter-spacing:.06em;color:var(--cream);line-height:1.15;}
+h1 em{color:var(--gold);font-style:italic;font-family:'Cormorant Garamond',serif;font-size:1.1em;}
+.hsub{margin-top:14px;font-size:16px;color:var(--cream-dim);font-style:italic;font-weight:300;}
+.dbadge{display:inline-flex;align-items:center;gap:8px;margin-top:18px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.2);padding:6px 14px;border-radius:2px;}
+.mrow{display:flex;gap:36px;margin-top:26px;flex-wrap:wrap;}
+.mi label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;color:var(--gold-dim);text-transform:uppercase;display:block;margin-bottom:4px;}
+.mi span{font-size:14px;color:var(--cream);font-weight:300;}
+.sbar{background:var(--ds);border-bottom:1px solid var(--db);padding:10px 48px;display:flex;align-items:center;justify-content:space-between;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--gold-dim);flex-wrap:wrap;gap:8px;}
+.sdot{display:inline-flex;align-items:center;gap:6px;color:var(--cream-dim);}
+.dot{width:7px;height:7px;border-radius:50%;background:#4CAF50;box-shadow:0 0 6px rgba(76,175,80,.5);animation:pulse 2s infinite;}
+.dot.am{background:#FFC107;box-shadow:0 0 6px rgba(255,193,7,.5);}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.abar{background:rgba(201,168,76,.04);border-bottom:1px solid var(--db);padding:10px 48px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.abar-t{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold-dim);letter-spacing:.1em;}
+.abar-btn{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;color:var(--gold);background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);padding:7px 18px;border-radius:2px;cursor:pointer;text-transform:uppercase;transition:all .2s;}
+.abar-btn:hover{background:rgba(201,168,76,.16);}
+.main{display:grid;grid-template-columns:1fr 370px;min-height:calc(100vh - 200px);}
+.galsec{padding:44px;border-right:1px solid var(--db);}
+.slabel{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:22px;display:flex;align-items:center;gap:12px;}
+.slabel::after{content:'';flex:1;height:1px;background:var(--db);}
+.gtabs{display:flex;margin-bottom:28px;border-bottom:1px solid var(--db);}
+.gtab{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--gold-dim);padding:10px 20px;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;text-transform:uppercase;background:none;border-top:none;border-left:none;border-right:none;}
+.gtab.on{color:var(--gold);border-bottom-color:var(--gold);}
+.igrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+.icard{background:var(--dc);border:1px solid var(--db);border-radius:2px;overflow:hidden;position:relative;aspect-ratio:4/3;cursor:pointer;transition:border-color .2s,transform .2s;}
+.icard:hover{border-color:var(--gold-dim);transform:scale(1.01);}
+.icard.wide{grid-column:span 2;aspect-ratio:16/7;}
+.iph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.iph svg{width:100%;height:100%;position:absolute;inset:0;opacity:.22;}
+.iblur{position:absolute;inset:0;backdrop-filter:blur(3px);background:rgba(13,11,8,.25);transition:all .6s;}
+.ilbl{position:absolute;bottom:10px;left:12px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;color:var(--gold-dim);text-transform:uppercase;}
+.iwm{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Cinzel',serif;font-size:11px;color:rgba(201,168,76,.22);letter-spacing:.3em;white-space:nowrap;pointer-events:none;text-transform:uppercase;}
+.tpanel{display:none;}.tpanel.on{display:block;}
+.sidebar{padding:44px 32px;display:flex;flex-direction:column;}
+.lcard{background:var(--dc);border:1px solid var(--db);border-radius:2px;padding:28px 24px;position:relative;overflow:hidden;}
+.lcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.5;}
+.liw{width:64px;height:64px;border-radius:50%;background:var(--rg);border:1px solid rgba(139,32,32,.4);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;transition:all .5s;}
+.liw.open{background:var(--gg);border-color:rgba(42,107,58,.5);}
+.ltitle{font-family:'Cinzel',serif;font-size:14px;letter-spacing:.14em;color:var(--cream);text-align:center;margin-bottom:5px;}
+.lsub{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;color:var(--gold-dim);text-align:center;text-transform:uppercase;margin-bottom:20px;}
+.pthint{font-family:'DM Mono',monospace;font-size:9px;color:var(--gold-dim);text-align:center;margin-bottom:8px;letter-spacing:.1em;}
+.ptable{border:1px solid var(--db);border-radius:2px;margin-bottom:16px;overflow:hidden;}
+.pthdr{display:grid;grid-template-columns:2fr 1fr 1fr;background:var(--ds);border-bottom:1px solid var(--db);padding:8px 12px;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;color:var(--gold-dim);text-transform:uppercase;}
+.ptrow{display:grid;grid-template-columns:2fr 1fr 1fr;padding:11px 12px;border-bottom:1px solid var(--db);align-items:center;cursor:pointer;transition:background .2s;}
+.ptrow:last-child{border-bottom:none;}
+.ptrow:hover{background:rgba(201,168,76,.04);}
+.ptrow.sel{background:rgba(201,168,76,.07);border-left:2px solid var(--gold);}
+.ptn{font-size:13px;color:var(--cream);font-weight:300;}
+.ptcx{font-family:'DM Mono',monospace;font-size:8px;padding:2px 6px;border-radius:2px;display:inline-block;}
+.cx-s{background:rgba(74,158,204,.1);color:#4A9ECC;border:1px solid rgba(74,158,204,.2);}
+.cx-d{background:rgba(201,168,76,.1);color:var(--gold);border:1px solid rgba(201,168,76,.2);}
+.cx-c{background:rgba(139,32,32,.1);color:#CC4444;border:1px solid rgba(139,32,32,.2);}
+.pta{font-family:'Cinzel',serif;font-size:15px;color:var(--gold);text-align:right;}
+.selb{background:var(--ds);border:1px solid var(--db);border-radius:2px;padding:12px 14px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;}
+.seln{font-size:13px;color:var(--cream-dim);font-style:italic;margin-top:3px;}
+.sela{font-family:'Cinzel',serif;font-size:22px;color:var(--gold);}
+.selg{font-family:'DM Mono',monospace;font-size:9px;color:var(--gold-dim);display:block;text-align:right;margin-top:2px;}
+.fwrap{margin-bottom:20px;}
+.flbl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:8px;}
+.fitem{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--db);}
+.fitem:last-child{border-bottom:none;}
+.finn{display:flex;align-items:center;gap:8px;width:100%;transition:filter .5s;}
+.finn.blurred{filter:blur(6px);user-select:none;pointer-events:none;}
+.ficon{width:26px;height:26px;background:var(--db);border-radius:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'DM Mono',monospace;font-size:7px;color:var(--gold-dim);text-transform:uppercase;}
+.fname{font-family:'DM Mono',monospace;font-size:10px;color:var(--cream-dim);flex:1;}
+.flink{font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);text-decoration:none;padding:3px 8px;border:1px solid rgba(201,168,76,.25);border-radius:2px;transition:all .2s;display:none;}
+.flink.vis{display:inline-block;}
+.flock{font-size:13px;opacity:.4;flex-shrink:0;}
+.paybtn{width:100%;padding:15px;background:linear-gradient(135deg,#1A4A28,#2A6B3A);border:1px solid rgba(42,107,58,.5);border-radius:2px;color:#7BF09C;font-family:'Cinzel',serif;font-size:12px;letter-spacing:.18em;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;gap:10px;}
+.paybtn:hover{box-shadow:0 0 22px rgba(42,107,58,.3);transform:translateY(-1px);}
+.upihint{font-family:'DM Mono',monospace;font-size:9px;color:rgba(123,240,156,.5);margin-top:7px;text-align:center;}
+.sucp{text-align:center;display:none;}
+.sucp.on{display:block;}
+.sicon{width:68px;height:68px;border-radius:50%;background:var(--gg);border:1px solid rgba(42,107,58,.5);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
+.stitle{font-family:'Cinzel',serif;font-size:17px;color:var(--cream);letter-spacing:.1em;margin-bottom:6px;}
+.ssub{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold-dim);margin-bottom:18px;}
+.fagrbtn{width:100%;padding:11px;background:rgba(42,107,58,.12);border:1px solid rgba(42,107,58,.3);border-radius:2px;color:#7BF09C;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;cursor:pointer;text-transform:uppercase;margin-top:10px;transition:all .2s;}
+.iband{padding:26px 48px;border-top:1px solid var(--db);display:grid;grid-template-columns:repeat(4,1fr);gap:22px;background:var(--ds);}
+.ic label{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold-dim);letter-spacing:.16em;text-transform:uppercase;display:block;margin-bottom:5px;}
+.ic p{font-size:14px;color:var(--cream-dim);font-weight:300;line-height:1.6;}
+footer{padding:18px 48px;border-top:1px solid var(--db);display:flex;align-items:center;justify-content:space-between;font-family:'DM Mono',monospace;font-size:10px;color:var(--gold-dim);}
+.mov{position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(10px);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;}
+.mov.on{opacity:1;pointer-events:all;}
+.modal{background:var(--dc);border:1px solid var(--db);border-radius:2px;width:420px;max-width:95vw;padding:36px 32px;position:relative;transform:translateY(18px);transition:transform .3s;}
+.mov.on .modal{transform:translateY(0);}
+.modal::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.mcls{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:20px;}
+.mtit{font-family:'Cinzel',serif;font-size:16px;letter-spacing:.14em;color:var(--cream);text-align:center;margin-bottom:4px;}
+.msub{font-family:'DM Mono',monospace;font-size:9px;color:var(--gold-dim);letter-spacing:.14em;text-align:center;margin-bottom:24px;text-transform:uppercase;}
+.qrb{background:#fff;border-radius:4px;padding:12px;margin:0 auto 16px;width:170px;height:170px;display:flex;align-items:center;justify-content:center;}
+.upiid{font-family:'DM Mono',monospace;font-size:12px;color:var(--gold);text-align:center;letter-spacing:.1em;background:var(--ds);border:1px solid var(--db);padding:10px 14px;border-radius:2px;margin-bottom:7px;}
+.cpyn{font-family:'DM Mono',monospace;font-size:9px;color:var(--gold-dim);text-align:center;margin-bottom:20px;cursor:pointer;}
+.amtr{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--ds);border:1px solid var(--db);border-radius:2px;margin-bottom:16px;}
+.amtr span{font-family:'DM Mono',monospace;font-size:10px;color:var(--cream-dim);}
+.amtr strong{font-family:'Cinzel',serif;font-size:20px;color:var(--gold);}
+.rgrp{margin-bottom:12px;}
+.rgrp label{font-family:'DM Mono',monospace;font-size:9px;color:var(--gold-dim);letter-spacing:.14em;text-transform:uppercase;display:block;margin-bottom:5px;}
+.rgrp input{width:100%;background:var(--ds);border:1px solid var(--db);border-radius:2px;padding:11px 12px;color:var(--cream);font-family:'DM Mono',monospace;font-size:13px;letter-spacing:.2em;outline:none;text-align:center;text-transform:uppercase;}
+.rgrp input::placeholder{color:var(--gold-dim);opacity:.4;letter-spacing:.05em;}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.vbtn{width:100%;padding:14px;background:linear-gradient(135deg,var(--gold-dim),var(--gold));border:none;border-radius:2px;color:var(--dark);font-family:'Cinzel',serif;font-size:12px;letter-spacing:.18em;cursor:pointer;transition:all .3s;}
+.agrov{position:fixed;inset:0;background:rgba(0,0,0,.92);backdrop-filter:blur(14px);z-index:600;display:none;align-items:center;justify-content:center;padding:20px;}
+.agrov.open{display:flex;}
+#ags{background:#fff;color:#1a1a1a;width:100%;max-width:760px;max-height:90vh;overflow-y:auto;border-radius:3px;font-family:Georgia,serif;}
+.agh{background:#0D0B08;padding:24px 36px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #C9A84C;}
+.agfm{color:#C9A84C;font-family:'Cinzel',serif;font-size:16px;letter-spacing:.14em;}
+.agfm span{display:block;color:#7A6130;font-size:9px;font-family:'DM Mono',monospace;letter-spacing:.14em;margin-top:3px;}
+.agrh{color:#7A6130;font-family:'DM Mono',monospace;font-size:10px;text-align:right;}
+.agbd{padding:32px 36px;}
+.agt{font-size:19px;font-weight:bold;text-align:center;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;}
+.agst{text-align:center;font-size:11px;color:#666;margin-bottom:24px;font-family:'DM Mono',monospace;}
+.agsp{display:inline-block;border:2px solid #C9A84C;color:#C9A84C;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.18em;padding:4px 12px;border-radius:2px;margin-bottom:20px;}
+.agsp.fin{border-color:#2A6B3A;color:#2A6B3A;}
+.agsc{margin-bottom:20px;}
+.agsc-t{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#666;border-bottom:1px solid #ddd;padding-bottom:5px;margin-bottom:10px;}
+.agrow{display:flex;gap:10px;margin-bottom:7px;font-size:13px;}
+.aglb{font-weight:bold;min-width:150px;color:#333;font-family:'DM Mono',monospace;font-size:10px;}
+.agvl{color:#1a1a1a;flex:1;}
+.agtbl{width:100%;border-collapse:collapse;margin-bottom:14px;font-size:12px;}
+.agtbl th{background:#0D0B08;color:#C9A84C;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;padding:8px 10px;text-align:left;}
+.agtbl td{padding:9px 10px;border-bottom:1px solid #eee;}
+.agtbl tr:last-child td{border-bottom:none;}
+.agtbl .tr td{background:#f8f5ef;font-weight:bold;border-top:2px solid #C9A84C;}
+.agcl{font-size:11px;color:#555;line-height:1.8;background:#f8f8f8;border-left:3px solid #C9A84C;padding:10px 14px;margin-bottom:9px;}
+.agsr{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:28px;}
+.agsl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#999;margin-bottom:7px;}
+.agsc2{width:100%;height:76px;border:1px solid #ddd;border-radius:2px;cursor:crosshair;background:#fafafa;display:block;}
+.agac{display:flex;gap:10px;padding:16px 36px;border-top:1px solid #eee;background:#f8f8f8;flex-wrap:wrap;}
+.agb{padding:11px 22px;border-radius:2px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;border:none;transition:all .2s;}
+.agb-p{background:#0D0B08;color:#C9A84C;}.agb-c{background:#fff;color:#999;border:1px solid #ddd;margin-left:auto;}
+.agft{text-align:center;padding:12px 36px;border-top:1px solid #eee;font-family:'DM Mono',monospace;font-size:9px;color:#bbb;}
+@media print{body *{visibility:hidden!important;}#ags,#ags *{visibility:visible!important;}#ags{position:fixed!important;inset:0!important;background:#fff!important;z-index:99999!important;}.np{display:none!important;}}
+#vaw{position:fixed;bottom:24px;right:24px;z-index:400;}
+#vab{background:var(--dc);border:1px solid var(--db);border-radius:50px;padding:9px 18px 9px 12px;display:flex;align-items:center;gap:9px;cursor:pointer;color:var(--gold-dim);transition:all .3s;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;}
+#vab:hover,#vab.sp{border-color:var(--gold);color:var(--gold);}
+#vab.sp{box-shadow:0 0 14px rgba(201,168,76,.2);}
+#vorb{width:30px;height:30px;border-radius:50%;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+#vap{position:absolute;bottom:50px;right:0;width:320px;background:var(--dc);border:1px solid var(--db);border-radius:3px;box-shadow:0 20px 50px rgba(0,0,0,.6);display:none;flex-direction:column;max-height:460px;}
+#vap.open{display:flex;}
+#vaph{background:var(--ab);padding:14px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--db);}
+#vav{width:30px;height:30px;border-radius:50%;background:rgba(180,100,200,.12);border:1px solid rgba(180,100,200,.25);display:flex;align-items:center;justify-content:center;color:#C87ED4;flex-shrink:0;}
+#van{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.14em;color:var(--cream);}
+#vast{font-family:'DM Mono',monospace;font-size:9px;color:var(--gold-dim);margin-top:2px;}
+#vacl{margin-left:auto;background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:18px;}
+#vawv{height:26px;display:flex;align-items:center;justify-content:center;gap:3px;padding:0 16px;background:var(--ds);border-bottom:1px solid var(--db);}
+#vawv span{display:inline-block;width:3px;height:7px;background:var(--gold-dim);border-radius:2px;}
+#vawv.act span:nth-child(1){animation:wv .8s ease infinite 0s;}
+#vawv.act span:nth-child(2){animation:wv .8s ease infinite .1s;}
+#vawv.act span:nth-child(3){animation:wv .8s ease infinite .2s;}
+#vawv.act span:nth-child(4){animation:wv .8s ease infinite .15s;}
+#vawv.act span:nth-child(5){animation:wv .8s ease infinite .05s;}
+@keyframes wv{0%,100%{height:3px}50%{height:16px}}
+#vac{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:9px;min-height:110px;}
+.vm{display:flex;align-items:flex-start;gap:7px;}
+.vm.user{flex-direction:row-reverse;}
+.vb{background:var(--ds);border:1px solid var(--db);border-radius:2px;padding:9px 12px;font-size:13px;color:var(--cream-dim);line-height:1.6;max-width:240px;}
+.vm.user .vb{background:rgba(201,168,76,.07);border-color:rgba(201,168,76,.15);}
+.vtd span{display:inline-block;width:6px;height:6px;background:var(--gold-dim);border-radius:50%;margin:0 2px;animation:bk 1.2s ease infinite;}
+.vtd span:nth-child(2){animation-delay:.2s;}
+.vtd span:nth-child(3){animation-delay:.4s;}
+@keyframes bk{0%,100%{opacity:.2}50%{opacity:1}}
+#vaq{display:flex;flex-wrap:wrap;gap:5px;padding:9px 14px;border-top:1px solid var(--db);}
+#vaq button{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.08em;color:var(--gold-dim);background:none;border:1px solid var(--db);border-radius:2px;padding:4px 9px;cursor:pointer;transition:all .2s;}
+#vaq button:hover{border-color:var(--gold-dim);color:var(--gold);}
+#vair{display:flex;gap:7px;padding:10px 12px;border-top:1px solid var(--db);background:var(--ds);}
+#vai{flex:1;background:#060F1A;border:1px solid var(--ab2);border-radius:2px;padding:8px 10px;color:var(--cream);font-family:'DM Mono',monospace;font-size:10px;outline:none;}
+#vasb{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);border-radius:2px;padding:7px 10px;color:var(--gold);cursor:pointer;}
+.lb{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:600;display:flex;align-items:center;justify-content:center;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .3s;}
+.lb.on{opacity:1;pointer-events:all;}
+.lbc{position:absolute;top:22px;right:28px;background:none;border:none;color:var(--gold-dim);font-size:28px;cursor:pointer;}
+.lbi{width:68vw;max-width:880px;aspect-ratio:16/9;background:var(--dc);border:1px solid var(--db);display:flex;align-items:center;justify-content:center;}
+.lbm{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--cream-dim);font-style:italic;text-align:center;padding:22px;}
+.lbcp{margin-top:14px;font-family:'DM Mono',monospace;font-size:10px;color:var(--gold-dim);letter-spacing:.14em;text-transform:uppercase;}
+@media(max-width:880px){.main{grid-template-columns:1fr;}.iband{grid-template-columns:repeat(2,1fr);}header,.hero,.galsec,.sidebar,.sbar,footer,.iband,.abar{padding-left:22px;padding-right:22px;}.hwm{display:none;}}
+@keyframes fu{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.hero,.galsec,.sidebar,.iband{animation:fu .6s ease both;}
+.galsec{animation-delay:.1s;}.sidebar{animation-delay:.2s;}.iband{animation-delay:.3s;}
+</style>
+</head>
+<body>
+<div id="__c" style="display:none">{&quot;firm&quot;:&quot;i3d Studio&quot;,&quot;tag&quot;:&quot;Architectural Intelligence · Est. 1999 · Coimbatore&quot;,&quot;web&quot;:&quot;i3dstudio.in&quot;,&quot;upi&quot;:&quot;shakhith-1@okicici&quot;,&quot;proj&quot;:&quot;Residential Villa&quot;,&quot;ref&quot;:&quot;i3D/2026/001&quot;,&quot;loc&quot;:&quot;Coimbatore, Tamil Nadu&quot;,&quot;client&quot;:&quot;&quot;,&quot;stage&quot;:&quot;Design Development&quot;,&quot;year&quot;:&quot;2026&quot;,&quot;sub&quot;:&quot;Comprehensive architectural drawings and 3D visualizations — SmartLock protected&quot;,&quot;dtype&quot;:&quot;Architectural Drawings&quot;,&quot;i1&quot;:&quot;A residential villa project encompassing complete architectural drawings, 3D visualizations, and design documentation prepared by i3d Studio, Coimbatore.&quot;,&quot;i2&quot;:&quot;Climatically responsive design with considered spatial planning, natural light strategy, and material palette suited to the region.&quot;,&quot;i3&quot;:&quot;All drawings are in print-ready vector format. Files are delivered digitally upon payment verification via SmartLock.&quot;,&quot;i4&quot;:&quot;Prepared by i3d Studio, Coimbatore. 25+ years of architectural practice across residential, commercial and institutional projects.&quot;,&quot;vaname&quot;:&quot;Aria&quot;,&quot;vagreet&quot;:&quot;Warm &amp; Professional&quot;,&quot;vagender&quot;:&quot;female&quot;,&quot;vaauto&quot;:&quot;yes&quot;,&quot;vakey&quot;:&quot;&quot;,&quot;vagreeting&quot;:&quot;&quot;,&quot;code&quot;:&quot;&quot;,&quot;master&quot;:&quot;&quot;,&quot;pricing&quot;:[{&quot;name&quot;:&quot;Concept / Schematic Plan&quot;,&quot;cx&quot;:&quot;Standard&quot;,&quot;rate&quot;:&quot;1999&quot;},{&quot;name&quot;:&quot;Floor Plan Set — Ground + First Floor&quot;,&quot;cx&quot;:&quot;Standard&quot;,&quot;rate&quot;:&quot;3999&quot;},{&quot;name&quot;:&quot;Full Plans + Elevation Set&quot;,&quot;cx&quot;:&quot;Detailed&quot;,&quot;rate&quot;:&quot;6999&quot;},{&quot;name&quot;:&quot;Working Drawings — Complete Set&quot;,&quot;cx&quot;:&quot;Detailed&quot;,&quot;rate&quot;:&quot;9999&quot;},{&quot;name&quot;:&quot;3D Exterior Render — Single View&quot;,&quot;cx&quot;:&quot;Standard&quot;,&quot;rate&quot;:&quot;2999&quot;},{&quot;name&quot;:&quot;3D Render Set — 4 Elevations&quot;,&quot;cx&quot;:&quot;Detailed&quot;,&quot;rate&quot;:&quot;7999&quot;}],&quot;files&quot;:[]}</div>
+<script>
+var C={},selectedPkg=null,pricing=[],files=[];
+try{var _e=document.getElementById('__c');if(_e){C=JSON.parse(_e.textContent||'{}');pricing=C.pricing||[];files=C.files||[];}}catch(e){console.error('Config:',e);}
+</script>
+
+<div class="ribbon" id="rib">✓ &nbsp; PAYMENT VERIFIED — GOOGLE DRIVE LINKS NOW ACTIVE</div>
+<header>
+  <div class="logo" id="hlogo">i3d Studio<span>Architectural Intelligence · Est. 1999 · Coimbatore</span></div>
+  <div class="hmeta" id="hmet">PROJECT ARCHIVE</div>
+</header>
+<div class="hero">
+  <div class="hwm" id="hwm">PROJECT</div>
+  <div class="ptag" id="ptag">i3d Studio · Deliverable</div>
+  <h1 id="htitle"><em>Project</em></h1>
+  <p class="hsub" id="hsub">SmartLock protected</p>
+  <div class="dbadge" id="dtyp">Architectural Drawings</div>
+  <div class="mrow">
+    <div class="mi"><label>Location</label><span id="mloc">—</span></div>
+    <div class="mi"><label>Stage</label><span id="mstg">—</span></div>
+    <div class="mi"><label>Year</label><span id="myr">2026</span></div>
+    <div class="mi" id="mclw" style="display:none"><label>Client</label><span id="mcl"></span></div>
+    <div class="mi"><label>Prepared by</label><span id="mfm">i3d Studio</span></div>
+  </div>
+</div>
+<div class="sbar">
+  <span class="sdot"><span class="dot"></span> Deliverable set active</span>
+  <span id="psb">Files locked · SmartLock protected</span>
+  <span class="sdot"><span class="dot am"></span> Payment required</span>
+</div>
+<div class="abar">
+  <div class="abar-t">Generate a signed agreement before or after payment.</div>
+  <button class="abar-btn" onclick="openAgr(false)">⬡ Generate Draft Agreement</button>
+</div>
+<div class="main">
+  <div class="galsec">
+    <div class="slabel">Deliverable Preview</div>
+    <div class="gtabs">
+      <button class="gtab on" onclick="swTab('p1',this)">Set A</button>
+      <button class="gtab" onclick="swTab('p2',this)">Set B</button>
+    </div>
+    <div class="tpanel on" id="tab-p1">
+      <div class="igrid">
+        <div class="icard wide" onclick="openLB('Document 01')"><div class="iph">
+          <svg viewBox="0 0 500 200"><rect x="20" y="20" width="460" height="160" fill="none" stroke="#C9A84C" stroke-width="2"/><rect x="20" y="20" width="140" height="80" fill="none" stroke="#C9A84C" stroke-width="1"/><rect x="160" y="20" width="120" height="80" fill="none" stroke="#C9A84C" stroke-width="1"/><rect x="280" y="20" width="200" height="80" fill="none" stroke="#C9A84C" stroke-width="1"/><rect x="20" y="100" width="200" height="80" fill="none" stroke="#C9A84C" stroke-width="1"/><rect x="220" y="100" width="100" height="80" fill="none" stroke="#C9A84C" stroke-width="1"/><rect x="320" y="100" width="160" height="80" fill="none" stroke="#C9A84C" stroke-width="1"/><text x="250" y="192" text-anchor="middle" fill="#7A6130" font-size="8" font-family="monospace">DOCUMENT 01 — PREVIEW</text></svg>
+          <div class="iblur" id="b1"></div><div class="iwm" id="w1">i3d Studio</div><div class="ilbl">DOC 01</div>
+        </div></div>
+        <div class="icard" onclick="openLB('Document 02')"><div class="iph">
+          <svg viewBox="0 0 300 220"><rect x="20" y="20" width="260" height="180" fill="none" stroke="#C9A84C" stroke-width="1.5"/><rect x="20" y="20" width="130" height="90" fill="none" stroke="#C9A84C" stroke-width="1"/><rect x="150" y="20" width="130" height="90" fill="none" stroke="#C9A84C" stroke-width="1"/><rect x="20" y="110" width="80" height="90" fill="none" stroke="#C9A84C" stroke-width="1"/><rect x="100" y="110" width="180" height="90" fill="none" stroke="#C9A84C" stroke-width="1"/></svg>
+          <div class="iblur" id="b2"></div><div class="iwm" id="w2">i3d Studio</div><div class="ilbl">DOC 02</div>
+        </div></div>
+        <div class="icard" onclick="openLB('Document 03')"><div class="iph">
+          <svg viewBox="0 0 300 220"><rect x="20" y="20" width="260" height="180" fill="none" stroke="#C9A84C" stroke-width="1.5" stroke-dasharray="8,4"/><rect x="60" y="60" width="180" height="120" fill="rgba(201,168,76,0.06)" stroke="#C9A84C" stroke-width="1.5"/><text x="150" y="130" text-anchor="middle" fill="#7A6130" font-size="7" font-family="monospace">DOC 03</text></svg>
+          <div class="iblur" id="b3"></div><div class="iwm" id="w3">i3d Studio</div><div class="ilbl">DOC 03</div>
+        </div></div>
+      </div>
+    </div>
+    <div class="tpanel" id="tab-p2">
+      <div class="igrid">
+        <div class="icard wide" onclick="openLB('Document 04')"><div class="iph">
+          <svg viewBox="0 0 500 200"><rect x="50" y="60" width="400" height="110" fill="rgba(201,168,76,0.05)" stroke="#C9A84C" stroke-width="1.5"/><rect x="100" y="20" width="300" height="60" fill="rgba(201,168,76,0.04)" stroke="#C9A84C" stroke-width="1"/><line x1="100" y1="20" x2="400" y2="20" stroke="#C9A84C" stroke-width="1.5"/><text x="250" y="192" text-anchor="middle" fill="#7A6130" font-size="8" font-family="monospace">DOC 04 — PREVIEW</text></svg>
+          <div class="iblur" id="b4"></div><div class="iwm" id="w4">i3d Studio</div><div class="ilbl">DOC 04</div>
+        </div></div>
+        <div class="icard" onclick="openLB('Document 05')"><div class="iph">
+          <svg viewBox="0 0 300 220"><rect x="30" y="70" width="240" height="120" fill="rgba(201,168,76,0.05)" stroke="#C9A84C" stroke-width="1.2"/><rect x="70" y="30" width="160" height="60" fill="rgba(201,168,76,0.04)" stroke="#C9A84C" stroke-width="1"/></svg>
+          <div class="iblur" id="b5"></div><div class="iwm" id="w5">i3d Studio</div><div class="ilbl">DOC 05</div>
+        </div></div>
+        <div class="icard" onclick="openLB('Document 06')"><div class="iph">
+          <svg viewBox="0 0 300 220"><rect x="40" y="80" width="220" height="110" fill="rgba(201,168,76,0.05)" stroke="#C9A84C" stroke-width="1.2"/><rect x="80" y="40" width="140" height="60" fill="rgba(201,168,76,0.04)" stroke="#C9A84C" stroke-width="1"/></svg>
+          <div class="iblur" id="b6"></div><div class="iwm" id="w6">i3d Studio</div><div class="ilbl">DOC 06</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+  <div class="sidebar">
+    <div class="slabel">Secure Access</div>
+    <div class="lcard" id="lcard">
+      <div id="lockedSt">
+        <div class="liw" id="liw">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#CC3333" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div class="ltitle">SmartLock Active</div>
+        <div class="lsub">Select · Pay · Download</div>
+        <div class="pthint">Select your package ↓</div>
+        <div class="ptable"><div class="pthdr"><span>Package</span><span>Level</span><span style="text-align:right">Charge</span></div><div id="ptrows"></div></div>
+        <div class="selb">
+          <div><div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--gold-dim);letter-spacing:.12em;text-transform:uppercase;">Selected</div><div class="seln" id="seln">— choose above —</div></div>
+          <div><div class="sela" id="sela" style="color:var(--gold-dim)">₹ —</div><span class="selg">Incl. 18% GST</span></div>
+        </div>
+        <div class="fwrap"><div class="flbl">Files <span id="fcnt"></span></div><div id="flist"></div></div>
+        <button class="paybtn" onclick="openPay()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          Unlock &amp; Download
+        </button>
+        <div class="upihint">UPI · Google Pay · PhonePe · BHIM</div>
+        <div style="margin-top:14px;font-family:'DM Mono',monospace;font-size:9px;color:var(--gold-dim);letter-spacing:.09em;line-height:2;">
+          <div>· Instant access on payment verification</div>
+          <div>· Google Drive direct download links</div>
+          <div id="plw">· i3d Studio · i3dstudio.in</div>
+        </div>
+      </div>
+      <div class="sucp" id="unlockedSt">
+        <div class="sicon"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#7BF09C" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="stitle">Access Granted</div>
+        <div class="ssub">Google Drive links are active</div>
+        <div id="dllist"></div>
+        <button class="fagrbtn" onclick="openAgr(true)">✓ Download Final Agreement PDF</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="iband">
+  <div class="ic"><label>Scope &amp; Brief</label><p id="ii1">—</p></div>
+  <div class="ic"><label>Design Approach</label><p id="ii2">—</p></div>
+  <div class="ic"><label>Deliverable Notes</label><p id="ii3">—</p></div>
+  <div class="ic"><label>About the Firm</label><p id="ii4">—</p></div>
+</div>
+<footer><span id="ffl">© 2026 i3d Studio</span><span id="ffr">i3d SmartLock v3</span></footer>
+
+<div class="mov" id="payMod">
+  <div class="modal">
+    <button class="mcls" onclick="closePay()">×</button>
+    <div id="payFm">
+      <div class="mtit">Secure Payment</div>
+      <div class="msub">Scan · Pay · WhatsApp Code · Unlock</div>
+      <div class="qrb">
+        <svg viewBox="0 0 148 148" width="146" height="146">
+          <rect width="148" height="148" fill="white"/>
+          <rect x="10" y="10" width="40" height="40" fill="none" stroke="#0D0B08" stroke-width="3"/><rect x="18" y="18" width="24" height="24" fill="#0D0B08"/>
+          <rect x="98" y="10" width="40" height="40" fill="none" stroke="#0D0B08" stroke-width="3"/><rect x="106" y="18" width="24" height="24" fill="#0D0B08"/>
+          <rect x="10" y="98" width="40" height="40" fill="none" stroke="#0D0B08" stroke-width="3"/><rect x="18" y="106" width="24" height="24" fill="#0D0B08"/>
+          <rect x="58" y="10" width="8" height="8" fill="#0D0B08"/><rect x="70" y="10" width="8" height="8" fill="#0D0B08"/>
+          <rect x="58" y="22" width="8" height="8" fill="#0D0B08"/><rect x="82" y="22" width="8" height="8" fill="#0D0B08"/>
+          <rect x="58" y="58" width="8" height="8" fill="#0D0B08"/><rect x="70" y="58" width="8" height="8" fill="#0D0B08"/><rect x="82" y="58" width="8" height="8" fill="#0D0B08"/>
+          <rect x="58" y="70" width="8" height="8" fill="#0D0B08"/><rect x="82" y="70" width="8" height="8" fill="#0D0B08"/>
+          <rect x="58" y="82" width="8" height="8" fill="#0D0B08"/><rect x="70" y="82" width="8" height="8" fill="#0D0B08"/>
+          <rect x="98" y="58" width="8" height="8" fill="#0D0B08"/><rect x="110" y="58" width="8" height="8" fill="#0D0B08"/><rect x="122" y="58" width="8" height="8" fill="#0D0B08"/>
+          <rect x="98" y="70" width="8" height="8" fill="#0D0B08"/><rect x="110" y="82" width="8" height="8" fill="#0D0B08"/><rect x="122" y="82" width="8" height="8" fill="#0D0B08"/>
+          <rect x="98" y="98" width="8" height="8" fill="#0D0B08"/><rect x="122" y="98" width="8" height="8" fill="#0D0B08"/>
+          <rect x="98" y="110" width="8" height="8" fill="#0D0B08"/><rect x="110" y="110" width="8" height="8" fill="#0D0B08"/>
+          <rect x="98" y="122" width="8" height="8" fill="#0D0B08"/><rect x="110" y="122" width="8" height="8" fill="#0D0B08"/><rect x="122" y="122" width="8" height="8" fill="#0D0B08"/>
+          <text x="74" y="76" text-anchor="middle" font-family="monospace" font-size="8" fill="#C9A84C" id="qrl">GPay</text>
+        </svg>
+      </div>
+      <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:.14em;color:var(--gold);text-align:center;margin-bottom:4px;" id="pfirm">i3d Studio</div>
+      <div class="upiid" id="pupi">shakhith-1@okicici</div>
+      <div class="cpyn" onclick="cpUpi()">⊕ tap to copy</div>
+      <div class="amtr"><span>Amount to Pay</span><strong id="pamt">₹ —</strong></div>
+      <div class="rgrp"><label>Your Name</label><input type="text" id="nmin" placeholder="Full name" style="text-align:left;letter-spacing:.03em;text-transform:none;"/></div>
+      <div class="rgrp"><label>WhatsApp Access Code</label><input type="text" id="coin" placeholder="6-digit code" maxlength="10" style="font-size:18px;letter-spacing:.4em;"/></div>
+      <button class="vbtn" onclick="verify()">Verify &amp; Unlock Files</button>
+      <div style="margin-top:12px;font-family:'DM Mono',monospace;font-size:9px;color:var(--gold-dim);text-align:center;line-height:1.9;">Pay via Google Pay · PhonePe · Paytm · Any UPI<br>WhatsApp code sent after payment confirmed</div>
+    </div>
+    <div id="verMsg" style="display:none;text-align:center;padding:28px 0;">
+      <div style="font-family:'Cinzel',serif;font-size:14px;color:var(--cream);margin-bottom:10px;">Verifying…</div>
+      <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--gold-dim);">Please wait a moment</div>
+    </div>
+  </div>
+</div>
+
+<div class="lb" id="lbx">
+  <button class="lbc" onclick="closeLB()">×</button>
+  <div class="lbi"><div class="lbm">🔒 Full-resolution protected<br><span style="font-size:13px;opacity:.6">Unlock via SmartLock to access</span></div></div>
+  <div class="lbcp" id="lbcp"></div>
+</div>
+
+<div class="agrov" id="agrov">
+<div id="ags">
+  <div class="agh"><div class="agfm" id="agfm">i3d Studio<span></span></div><div class="agrh" id="agrh">PROJECT ARCHIVE</div></div>
+  <div class="agbd">
+    <div class="agt">Letter of Engagement</div>
+    <div class="agst">Professional Architectural Services Agreement</div>
+    <div style="text-align:center;margin-bottom:18px;"><span class="agsp" id="agsp">DRAFT — PENDING PAYMENT</span></div>
+    <div class="agsc"><div class="agsc-t">Parties</div>
+      <div class="agrow"><span class="aglb">Service Provider</span><span class="agvl" id="agprov">i3d Studio</span></div>
+      <div class="agrow"><span class="aglb">Client Name</span><span class="agvl"><input id="agcn" style="border:none;border-bottom:1px solid #ccc;width:280px;font-family:Georgia,serif;font-size:13px;outline:none;" placeholder="Client full name"/></span></div>
+      <div class="agrow"><span class="aglb">Client Contact</span><span class="agvl"><input id="agcc" style="border:none;border-bottom:1px solid #ccc;width:280px;font-family:Georgia,serif;font-size:13px;outline:none;" placeholder="Phone / Email"/></span></div>
+      <div class="agrow"><span class="aglb">Date</span><span class="agvl" id="agdt"></span></div>
+    </div>
+    <div class="agsc"><div class="agsc-t">Project Details</div>
+      <div class="agrow"><span class="aglb">Project Title</span><span class="agvl" id="agpj"></span></div>
+      <div class="agrow"><span class="aglb">Reference No.</span><span class="agvl" id="agrn"></span></div>
+      <div class="agrow"><span class="aglb">Location</span><span class="agvl" id="agloc"></span></div>
+      <div class="agrow"><span class="aglb">Stage</span><span class="agvl" id="agstg"></span></div>
+      <div class="agrow"><span class="aglb">Deliverable Type</span><span class="agvl" id="agdt2"></span></div>
+    </div>
+    <div class="agsc"><div class="agsc-t">Scope &amp; Charges</div>
+      <table class="agtbl"><thead><tr><th>#</th><th>Package</th><th>Level</th><th style="text-align:right">Charge (₹)</th></tr></thead><tbody id="agpr"></tbody><tfoot><tr class="tr"><td colspan="3" style="text-align:right;font-family:'DM Mono',monospace;font-size:9px;">TOTAL</td><td style="text-align:right;font-size:14px;" id="agtt">₹ —</td></tr></tfoot></table>
+      <div class="agrow"><span class="aglb">Payment Mode</span><span class="agvl">UPI · Google Pay · PhonePe</span></div>
+      <div class="agrow"><span class="aglb">UPI ID</span><span class="agvl" id="agupi"></span></div>
+    </div>
+    <div class="agsc"><div class="agsc-t">Files to be Delivered</div>
+      <table class="agtbl"><thead><tr><th>#</th><th>Filename</th><th>Format</th></tr></thead><tbody id="agfr"></tbody></table>
+    </div>
+    <div class="agsc"><div class="agsc-t">Terms &amp; Conditions</div>
+      <div class="agcl">1. All deliverables are protected via i3d SmartLock. Access is granted upon receipt and verification of full payment by i3d Studio.</div>
+      <div class="agcl">2. The quoted package covers only the specific deliverables listed herein. Additional work beyond this scope will be quoted separately.</div>
+      <div class="agcl">3. Intellectual property of all drawings remains with i3d Studio until full payment is received. Upon payment, a non-exclusive license to use the deliverables for the stated project is granted.</div>
+      <div class="agcl">4. Deliverables are provided in digital format via Google Drive. Print, fabrication, or construction based on these drawings is the sole responsibility of the client.</div>
+      <div class="agcl">5. This agreement is binding upon digital acknowledgement or signature by both parties.</div>
+    </div>
+    <div class="agsc np"><div class="agsc-t">Digital Signatures</div>
+      <div class="agsr">
+        <div><div class="agsl">Client Signature</div><canvas class="agsc2" id="cSig" width="310" height="76"></canvas><div style="font-size:9px;color:#aaa;margin-top:4px;font-family:'DM Mono',monospace;">Draw above · <span style="cursor:pointer;color:#C9A84C;" onclick="clrSig('cSig')">Clear</span></div></div>
+        <div><div class="agsl">Architect — i3d Studio</div><canvas class="agsc2" id="aSig" width="310" height="76"></canvas><div style="font-size:9px;color:#aaa;margin-top:4px;font-family:'DM Mono',monospace;">Draw above · <span style="cursor:pointer;color:#C9A84C;" onclick="clrSig('aSig')">Clear</span></div></div>
+      </div>
+    </div>
+    <div class="agsr" style="margin-top:24px;">
+      <div><div class="agsl">Client Signature &amp; Date</div><div style="height:56px;border-bottom:1px solid #999;margin-bottom:7px;"></div><div style="font-size:11px;color:#555;">_______________________</div></div>
+      <div><div class="agsl">Architect — i3d Studio</div><div style="height:56px;border-bottom:1px solid #999;margin-bottom:7px;"></div><div style="font-size:11px;color:#555;" id="aarch">Shakhith A M · i3d Studio</div></div>
+    </div>
+  </div>
+  <div class="agac np"><button class="agb agb-p" onclick="printAgr()">⬇ Download / Print PDF</button><button class="agb agb-c" onclick="closeAgr()">Close</button></div>
+  <div class="agft">Generated by i3d SmartLock · i3dstudio.in · Binding upon signature by both parties</div>
+</div>
+</div>
+
+<div id="vaw">
+  <button id="vab" onclick="togVA()">
+    <div id="vorb"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg></div>
+    <span id="vabl">Ask Aria</span>
+  </button>
+  <div id="vap">
+    <div id="vaph">
+      <div id="vav"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg></div>
+      <div><div id="van">Aria</div><div id="vast">i3d Studio Assistant</div></div>
+      <button id="vacl" onclick="closeVA()">×</button>
+    </div>
+    <div id="vawv"><span></span><span></span><span></span><span></span><span></span></div>
+    <div id="vac"></div>
+    <div id="vaq">
+      <button onclick="sendQ('What drawings are included?')">What drawings?</button>
+      <button onclick="sendQ('Explain the pricing.')">Pricing</button>
+      <button onclick="sendQ('How do I pay and get access?')">How to pay?</button>
+      <button onclick="sendQ('How do the Google Drive links work?')">File access?</button>
+    </div>
+    <div id="vair">
+      <input id="vai" placeholder="Ask Aria anything…" onkeydown="if(event.key==='Enter')sendMsg()"/>
+      <button id="vasb" onclick="sendMsg()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<script>
+function ss(id,v,p){var e=document.getElementById(id);if(e)e[p||'textContent']=v;}
+window.addEventListener('DOMContentLoaded',function(){
+  // Populate from config
+  var logo=document.getElementById('hlogo');
+  if(logo)logo.innerHTML=C.firm+'<span>'+(C.tag||'')+'</span>';
+  ss('hmet','PROJECT ARCHIVE\n'+(C.ref||''));
+  ss('hwm',(C.proj||'Project').toUpperCase());
+  var tagEl=document.getElementById('ptag');
+  if(tagEl)tagEl.innerHTML=(C.firm||'i3d Studio')+' · '+(C.dtype||'Architectural Drawings');
+  var words=(C.proj||'Project').trim().split(' '),last=words.pop(),rest=words.join(' ');
+  var h1=document.getElementById('htitle');
+  if(h1)h1.innerHTML=(rest?rest+' ':'')+'<em>'+last+'</em>';
+  ss('hsub',C.sub||'');
+  ss('dtyp',C.dtype||'Architectural Drawings');
+  ss('mloc',C.loc||'—');ss('mstg',C.stage||'—');ss('myr',C.year||'2026');ss('mfm',C.firm||'i3d Studio');
+  if(C.client){ss('mcl',C.client);var cw=document.getElementById('mclw');if(cw)cw.style.display='';}
+  for(var i=1;i<=6;i++){var w=document.getElementById('w'+i);if(w)w.textContent=(C.firm||'i3d Studio')+' — Confidential';}
+  var fc=files.filter(function(f){return f.name;}).length;
+  ss('psb',fc+' file'+(fc!==1?'s':'')+' · '+(C.dtype||'')+ ' · SmartLock protected');
+  ss('ii1',C.i1||'');ss('ii2',C.i2||'');ss('ii3',C.i3||'');ss('ii4',C.i4||'');
+  ss('ffl','© '+(C.year||'2026')+' '+(C.firm||'i3d Studio')+(C.web?' · '+C.web:''));
+  ss('ffr',(C.ref||'')+' · i3d SmartLock v3');
+  ss('plw','· '+(C.firm||'i3d Studio')+(C.web?' · '+C.web:''));
+  ss('pupi',C.upi||'your-upi@ybl');ss('pfirm',C.firm||'i3d Studio');
+  var qrl=document.getElementById('qrl');if(qrl)qrl.textContent=C.upi||'GPay';
+  var cpn=document.querySelector('.cpyn');if(cpn)cpn.textContent='⊕ tap to copy · '+(C.upi||'');
+  renderPricing();renderFiles();
+  initVA();
+  document.getElementById('agrov').addEventListener('click',function(e){if(e.target.id==='agrov')closeAgr();});
+  document.getElementById('payMod').addEventListener('click',function(e){if(e.target.id==='payMod')closePay();});
+  document.getElementById('lbx').addEventListener('click',function(e){if(e.target.id==='lbx')closeLB();});
+});
+var CX={Standard:'cx-s',Detailed:'cx-d',Complex:'cx-c'};
+function renderPricing(){
+  var c=document.getElementById('ptrows');if(!c)return;c.innerHTML='';
+  pricing.forEach(function(p,i){
+    if(!p.name||!p.rate)return;
+    var r=document.createElement('div');r.className='ptrow';r.id='pr_'+i;
+    r.onclick=function(){selPkg(i,p);};
+    r.innerHTML='<span class="ptn">'+p.name+'</span><span><span class="ptcx '+(CX[p.cx]||'cx-s')+'">'+p.cx+'</span></span><span class="pta">₹'+Number(p.rate).toLocaleString('en-IN')+'</span>';
+    c.appendChild(r);
+  });
+}
+function selPkg(i,p){
+  document.querySelectorAll('.ptrow').forEach(function(r){r.classList.remove('sel');});
+  var el=document.getElementById('pr_'+i);if(el)el.classList.add('sel');
+  selectedPkg=p;
+  ss('seln',p.name);
+  var sa=document.getElementById('sela');if(sa){sa.textContent='₹'+Number(p.rate).toLocaleString('en-IN');sa.style.color='var(--gold)';}
+  ss('pamt','₹'+Number(p.rate).toLocaleString('en-IN'));
+}
+function renderFiles(){
+  var c=document.getElementById('flist');if(!c)return;c.innerHTML='';
+  var fc=files.filter(function(f){return f.name;});
+  var cnt=document.getElementById('fcnt');if(cnt)cnt.textContent='('+fc.length+' file'+(fc.length!==1?'s':'')+' — locked)';
+  fc.forEach(function(f,i){
+    var div=document.createElement('div');div.className='fitem';div.id='fi_'+i;
+    div.innerHTML='<div class="finn blurred" id="fn_'+i+'">'
+      +'<div class="ficon">'+(f.fmt||'PDF')+'</div>'
+      +'<span class="fname">'+f.name+'</span>'
+      +'<a class="flink" id="fl_'+i+'" href="'+(f.url||'#')+'" target="_blank" rel="noopener">↗ Open</a>'
+      +'</div><span class="flock" id="fk_'+i+'">🔒</span>';
+    c.appendChild(div);
+  });
+}
+function openPay(){
+  if(!selectedPkg){var pt=document.getElementById('ptrows');if(pt){pt.style.outline='1px solid var(--gold)';setTimeout(function(){pt.style.outline='none';},1400);}return;}
+  document.getElementById('payMod').classList.add('on');
+}
+function closePay(){
+  document.getElementById('payMod').classList.remove('on');
+  document.getElementById('payFm').style.display='block';
+  document.getElementById('verMsg').style.display='none';
+}
+function cpUpi(){
+  navigator.clipboard.writeText(C.upi||'').catch(function(){});
+  var cpn=document.querySelector('.cpyn');if(cpn){cpn.textContent='✓ Copied!';setTimeout(function(){cpn.textContent='⊕ tap to copy · '+(C.upi||'');},2000);}
+}
+function verify(){
+  var code=(document.getElementById('coin').value||'').trim().toUpperCase();
+  var name=(document.getElementById('nmin').value||'').trim();
+  if(!name){document.getElementById('nmin').style.borderColor='#8B2020';document.getElementById('nmin').focus();return;}
+  if(code.length<4){shk('coin');return;}
+  var master=(C.master||'').toUpperCase();
+  var valid=(C.code||'').toUpperCase();
+  var dev=!master&&!valid;
+  if(!dev&&code!==master&&code!==valid){shk('coin');vSpeak('That access code is not valid. Please check the code sent via WhatsApp.');return;}
+  document.getElementById('payFm').style.display='none';
+  document.getElementById('verMsg').style.display='block';
+  setTimeout(function(){closePay();unlock();},1800);
+}
+function shk(id){var el=document.getElementById(id);if(!el)return;el.style.borderColor='#8B2020';el.style.animation='shake .4s ease';setTimeout(function(){el.style.animation='';el.style.borderColor='';},500);}
+function unlock(){
+  document.getElementById('rib').classList.add('on');
+  var iw=document.getElementById('liw');
+  if(iw){iw.classList.add('open');iw.innerHTML='<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7BF09C" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>';}
+  document.querySelectorAll('.iblur').forEach(function(el){el.style.backdropFilter='none';el.style.background='transparent';});
+  files.filter(function(f){return f.name;}).forEach(function(f,i){
+    var inn=document.getElementById('fn_'+i);
+    var lnk=document.getElementById('fl_'+i);
+    var lck=document.getElementById('fk_'+i);
+    if(inn)inn.classList.remove('blurred');
+    if(lnk){lnk.classList.add('vis');if(f.url)lnk.href=f.url;}
+    if(lck)lck.style.display='none';
+  });
+  setTimeout(function(){
+    var ls=document.getElementById('lockedSt');if(ls)ls.style.display='none';
+    var us=document.getElementById('unlockedSt');if(us)us.classList.add('on');
+  },600);
+  var lc=document.getElementById('lcard');if(lc)lc.scrollIntoView({behavior:'smooth',block:'center'});
+  var pkg=selectedPkg;
+  var msg=pkg?'Wonderful! '+pkg.name+' is now unlocked. Your Google Drive links are active — click Open next to each file. Thank you for working with '+(C.firm||'i3d Studio')+'!':'Files unlocked! Thank you for your payment.';
+  setTimeout(function(){vSpeak(msg);addVM('assistant',msg);openVA();},1000);
+}
+function swTab(id,btn){
+  document.querySelectorAll('.gtab').forEach(function(b){b.classList.remove('on');});
+  document.querySelectorAll('.tpanel').forEach(function(p){p.classList.remove('on');});
+  btn.classList.add('on');
+  var panel=document.getElementById('tab-'+id);if(panel)panel.classList.add('on');
+}
+function openLB(n){ss('lbcp',n);document.getElementById('lbx').classList.add('on');}
+function closeLB(){document.getElementById('lbx').classList.remove('on');}
+function openAgr(isFinal){
+  var agf=document.getElementById('agfm');
+  if(agf){agf.childNodes[0].textContent=C.firm||'i3d Studio';var sp=agf.querySelector('span');if(sp)sp.textContent=C.web||'';}
+  ss('agrh','PROJECT ARCHIVE\n'+(C.ref||''));
+  var sp2=document.getElementById('agsp');
+  if(sp2){sp2.textContent=isFinal?'✓ CONFIRMED — PAYMENT RECEIVED':'DRAFT — PENDING PAYMENT';sp2.className=isFinal?'agsp fin':'agsp';}
+  ss('agprov',(C.firm||'i3d Studio')+(C.web?' · '+C.web:''));
+  ss('agpj',C.proj||'');ss('agrn',C.ref||'');ss('agloc',C.loc||'');ss('agstg',C.stage||'');ss('agdt2',C.dtype||'');ss('agupi',C.upi||'');
+  ss('agdt',new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'}));
+  var tb=document.getElementById('agpr');if(tb){tb.innerHTML='';
+    var pkgs=selectedPkg?[selectedPkg]:pricing.filter(function(p){return p.name&&p.rate;}).slice(0,5);
+    var tot=0;pkgs.forEach(function(p,i){var tr=document.createElement('tr');var amt=Number(p.rate)||0;tot+=amt;
+      tr.innerHTML='<td style="color:#999;font-family:monospace;font-size:9px">'+(i+1)+'</td><td><strong>'+p.name+'</strong></td><td style="font-family:monospace;font-size:9px">'+p.cx+'</td><td style="text-align:right;font-family:monospace">₹'+amt.toLocaleString('en-IN')+'</td>';
+      tb.appendChild(tr);});
+    ss('agtt','₹'+tot.toLocaleString('en-IN'));}
+  var fb=document.getElementById('agfr');if(fb){fb.innerHTML='';
+    files.filter(function(f){return f.name;}).forEach(function(f,i){var tr=document.createElement('tr');
+      tr.innerHTML='<td style="color:#999;font-family:monospace;font-size:9px">'+(i+1)+'</td><td><strong>'+f.name+'</strong></td><td style="font-family:monospace;font-size:9px">'+f.fmt+'</td>';
+      fb.appendChild(tr);});}
+  var ni=document.getElementById('nmin');var an=document.getElementById('agcn');if(ni&&ni.value&&an)an.value=ni.value;
+  document.getElementById('agrov').classList.add('open');
+  setTimeout(function(){setupSig('cSig');setupSig('aSig');},100);
+}
+function closeAgr(){document.getElementById('agrov').classList.remove('open');}
+function setupSig(id){
+  var c=document.getElementById(id);if(!c)return;
+  var ctx=c.getContext('2d');var drawing=false;
+  ctx.strokeStyle='#1a1a1a';ctx.lineWidth=1.8;ctx.lineCap='round';
+  c.onmousedown=function(e){drawing=true;ctx.beginPath();ctx.moveTo(e.offsetX,e.offsetY);};
+  c.onmousemove=function(e){if(!drawing)return;ctx.lineTo(e.offsetX,e.offsetY);ctx.stroke();};
+  c.onmouseup=c.onmouseleave=function(){drawing=false;};
+}
+function clrSig(id){var c=document.getElementById(id);if(c)c.getContext('2d').clearRect(0,0,c.width,c.height);}
+function printAgr(){
+  ['cSig','aSig'].forEach(function(id){var c=document.getElementById(id);if(c){var img=document.createElement('img');img.src=c.toDataURL();img.style.cssText='height:58px;display:block;';img.className='ps_'+id;var ex=document.querySelector('.ps_'+id);if(ex)ex.remove();c.parentNode.insertBefore(img,c);}});
+  window.print();
+}
+var VA={name:'Aria',gender:'female',autoGreet:true,greetStyle:'Warm & Professional',customGreeting:'',apiKey:'',history:[],speaking:false,synth:window.speechSynthesis||null};
+function initVA(){
+  VA.name=C.vaname||'Aria';VA.gender=C.vagender||'female';VA.autoGreet=C.vaauto==='yes';
+  VA.greetStyle=C.vagreet||'Warm & Professional';VA.customGreeting=C.vagreeting||'';VA.apiKey=C.vakey||'';
+  ss('van',VA.name);ss('vast',(C.firm||'i3d Studio')+' · Design Assistant');ss('vabl','Ask '+VA.name);
+  var vi=document.getElementById('vai');if(vi)vi.placeholder='Ask '+VA.name+'…';
+  if(window.speechSynthesis){window.speechSynthesis.getVoices();window.speechSynthesis.onvoiceschanged=function(){window.speechSynthesis.getVoices();};}
+  if(VA.autoGreet)setTimeout(greetV,1400);
+}
+function greetV(){openVA();var msg=VA.customGreeting||buildG();addVM('assistant',msg);vSpeak(msg);}
+function buildG(){
+  var h=new Date().getHours(),t=h<12?'Good morning':h<17?'Good afternoon':'Good evening';
+  var g={'Warm & Professional':t+'! Welcome to '+(C.firm||'i3d Studio')+"'s secure portal. I'm "+VA.name+', your design assistant. You are viewing the '+(C.proj||'project')+' deliverable package. How may I help?','Friendly & Casual':'Hey there! '+t+"! I'm "+VA.name+' from '+(C.firm||'i3d Studio')+'. I can walk you through the drawings, pricing, and file access. What would you like to know?','Formal & Corporate':t+'. Welcome to the '+(C.firm||'i3d Studio')+' professional portal. I am '+VA.name+', your dedicated assistant. How may I assist you?'};
+  return g[VA.greetStyle]||g['Warm & Professional'];
+}
+function togVA(){var p=document.getElementById('vap');if(p.classList.contains('open'))closeVA();else openVA();}
+function openVA(){document.getElementById('vap').classList.add('open');var c=document.getElementById('vac');if(c)c.scrollTop=c.scrollHeight;}
+function closeVA(){document.getElementById('vap').classList.remove('open');if(VA.synth)VA.synth.cancel();}
+function addVM(role,text){
+  var chat=document.getElementById('vac');var div=document.createElement('div');div.className='vm '+role;
+  div.innerHTML='<div class="vb">'+text+'</div>';chat.appendChild(div);chat.scrollTop=chat.scrollHeight;
+  VA.history.push({role:role==='assistant'?'assistant':'user',content:text});
+}
+function shTyp(){var chat=document.getElementById('vac');var d=document.createElement('div');d.className='vm assistant';d.id='vtyp';d.innerHTML='<div class="vb vtd"><span></span><span></span><span></span></div>';chat.appendChild(d);chat.scrollTop=chat.scrollHeight;}
+function hiTyp(){var el=document.getElementById('vtyp');if(el)el.remove();}
+function sendMsg(){
+  var inp=document.getElementById('vai');var text=inp.value.trim();if(!text)return;
+  inp.value='';openVA();addVM('user',text);shTyp();
+  getAIR(text).then(function(r){hiTyp();addVM('assistant',r);vSpeak(r);}).catch(function(){hiTyp();var r=fallback(text);addVM('assistant',r);vSpeak(r);});
+}
+function sendQ(t){document.getElementById('vai').value=t;sendMsg();}
+function getAIR(msg){
+  if(!VA.apiKey)return Promise.resolve(fallback(msg));
+  var sys='You are '+VA.name+', a warm assistant for '+(C.firm||'i3d Studio')+'. Project: '+(C.proj||'')+' ('+(C.dtype||'')+') in '+(C.loc||'')+'. Packages: '+pricing.filter(function(p){return p.name&&p.rate;}).map(function(p){return p.name+' ₹'+p.rate;}).join(', ')+'. Files via Google Drive after UPI payment. Be concise — 2-3 sentences.';
+  return fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:220,system:sys,messages:VA.history.slice(-6).concat([{role:'user',content:msg}])})})
+    .then(function(r){return r.json();}).then(function(d){if(d.content&&d.content[0])return d.content[0].text;throw new Error('No reply');});
+}
+function fallback(t){
+  var tl=t.toLowerCase();
+  if(tl.includes('draw')||tl.includes('what')||tl.includes('includ'))return 'This portal contains '+(C.dtype||'drawings')+' for '+(C.proj||'the project')+'. The '+files.filter(function(f){return f.name;}).length+' files are delivered via Google Drive — links are blurred until payment is verified.';
+  if(tl.includes('pric')||tl.includes('cost')||tl.includes('charg'))return 'We have '+pricing.filter(function(p){return p.name;}).length+' packages. Select the one that suits your scope and click Unlock to proceed with payment.';
+  if(tl.includes('pay')||tl.includes('code')||tl.includes('how'))return 'Select your package, click Unlock, scan the GPay QR or pay to our UPI ID. Once confirmed, I will send you a 6-digit WhatsApp code. Enter it here to unlock all Google Drive links instantly.';
+  if(tl.includes('file')||tl.includes('drive')||tl.includes('download'))return 'After entering the WhatsApp code, the Google Drive links appear right here in the sidebar. Click Open next to each file to download directly — no email needed.';
+  if(tl.includes('thank'))return "You're most welcome! Feel free to ask if you need anything else.";
+  return "I'd be happy to help! Select a package on the right, complete the UPI payment, and use the WhatsApp code to unlock all files instantly. Shall I walk you through any step?";
+}
+function ttsC(t){return t.replace(/3D/g,'three D').replace(/i3d/gi,'i three D').replace(/UPI/g,'U P I').replace(/GPay/gi,'Google Pay').replace(/₹/g,' rupees ').replace(/\s+/g,' ').trim();}
+function vSpeak(text){
+  if(!VA.synth)return;
+  VA.synth.cancel();
+  var utt=new SpeechSynthesisUtterance(ttsC(text).substring(0,320));
+  utt.lang='en-IN';utt.rate=0.91;utt.pitch=VA.gender==='female'?1.12:0.9;
+  var voices=VA.synth.getVoices();
+  var ranked=voices.filter(function(v){return v.lang.startsWith('en');}).sort(function(a,b){
+    function sc(v){var s=0,n=v.name.toLowerCase();if(VA.gender==='female'){if(n.includes('female')||n.includes('zira')||n.includes('samantha')||n.includes('aditi'))s+=8;}else{if(n.includes('david')||n.includes('mark'))s+=8;}if(v.lang.includes('en-IN'))s+=5;if(n.includes('google'))s+=3;return s;}
+    return sc(b)-sc(a);
+  });
+  if(ranked[0])utt.voice=ranked[0];
+  utt.onstart=function(){VA.speaking=true;document.getElementById('vab').classList.add('sp');document.getElementById('vawv').classList.add('act');ss('vabl','Speaking…');};
+  utt.onend=function(){VA.speaking=false;document.getElementById('vab').classList.remove('sp');document.getElementById('vawv').classList.remove('act');ss('vabl','Ask '+VA.name);};
+  VA.synth.speak(utt);
+}
+</script>
+</body>
+</html>
