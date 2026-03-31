@@ -42,15 +42,23 @@ h1 em{color:var(--gold);font-style:italic;font-family:'Cormorant Garamond',serif
 .gtabs{display:flex;margin-bottom:28px;border-bottom:1px solid var(--db);}
 .gtab{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--gold-dim);padding:10px 20px;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;text-transform:uppercase;background:none;border-top:none;border-left:none;border-right:none;}
 .gtab.on{color:var(--gold);border-bottom-color:var(--gold);}
+/* GALLERY GRID */
 .igrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
-.icard{background:var(--dc);border:1px solid var(--db);border-radius:2px;overflow:hidden;position:relative;aspect-ratio:4/3;cursor:pointer;transition:border-color .2s,transform .2s;}
+.icard{border:1px solid var(--db);border-radius:2px;overflow:hidden;position:relative;aspect-ratio:4/3;cursor:pointer;transition:border-color .2s,transform .2s;background:var(--dc);}
 .icard:hover{border-color:var(--gold-dim);transform:scale(1.01);}
 .icard.wide{grid-column:span 2;aspect-ratio:16/7;}
-.iph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
-.iph svg{width:100%;height:100%;position:absolute;inset:0;opacity:.22;}
-.iblur{position:absolute;inset:0;backdrop-filter:blur(3px);background:rgba(13,11,8,.25);transition:all .6s;}
-.ilbl{position:absolute;bottom:10px;left:12px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;color:var(--gold-dim);text-transform:uppercase;}
-.iwm{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Cinzel',serif;font-size:11px;color:rgba(201,168,76,.22);letter-spacing:.3em;white-space:nowrap;pointer-events:none;text-transform:uppercase;}
+.iph{width:100%;height:100%;position:relative;overflow:hidden;}
+/* Real image display */
+.iph img{width:100%;height:100%;object-fit:cover;display:block;}
+/* Blur overlay - removed on unlock */
+.iblur{position:absolute;inset:0;backdrop-filter:blur(12px);background:rgba(13,11,8,.4);transition:all .8s;}
+.iblur.clear{backdrop-filter:none;background:transparent;}
+.ilbl{position:absolute;bottom:10px;left:12px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;color:var(--gold-dim);text-transform:uppercase;z-index:2;}
+.iwm{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Cinzel',serif;font-size:11px;color:rgba(201,168,76,.3);letter-spacing:.3em;white-space:nowrap;pointer-events:none;text-transform:uppercase;z-index:2;transition:opacity .6s;}
+.iwm.hidden{opacity:0;}
+/* Placeholder for cards without images */
+.iph-svg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.iph-svg svg{width:100%;height:100%;position:absolute;inset:0;opacity:.22;}
 .tpanel{display:none;}.tpanel.on{display:block;}
 .sidebar{padding:44px 32px;display:flex;flex-direction:column;}
 .lcard{background:var(--dc);border:1px solid var(--db);border-radius:2px;padding:28px 24px;position:relative;overflow:hidden;}
@@ -95,11 +103,18 @@ h1 em{color:var(--gold);font-style:italic;font-family:'Cormorant Garamond',serif
 .sicon{width:68px;height:68px;border-radius:50%;background:var(--gg);border:1px solid rgba(42,107,58,.5);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
 .stitle{font-family:'Cinzel',serif;font-size:17px;color:var(--cream);letter-spacing:.1em;margin-bottom:6px;}
 .ssub{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold-dim);margin-bottom:18px;}
-.fagrbtn{width:100%;padding:11px;background:rgba(42,107,58,.12);border:1px solid rgba(42,107,58,.3);border-radius:2px;color:#7BF09C;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;cursor:pointer;text-transform:uppercase;margin-top:10px;transition:all .2s;}
+/* Download list after unlock */
+.dlitem{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--db);}
+.dlitem:last-child{border-bottom:none;}
+.dlico{width:32px;height:32px;background:rgba(42,107,58,.15);border:1px solid rgba(42,107,58,.3);border-radius:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.dlname{font-family:'DM Mono',monospace;font-size:10px;color:var(--cream-dim);flex:1;}
+.dlbtn{font-family:'DM Mono',monospace;font-size:9px;color:#7BF09C;text-decoration:none;padding:4px 10px;border:1px solid rgba(42,107,58,.4);border-radius:2px;white-space:nowrap;}
+.fagrbtn{width:100%;padding:11px;background:rgba(42,107,58,.12);border:1px solid rgba(42,107,58,.3);border-radius:2px;color:#7BF09C;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;cursor:pointer;text-transform:uppercase;margin-top:14px;transition:all .2s;}
 .iband{padding:26px 48px;border-top:1px solid var(--db);display:grid;grid-template-columns:repeat(4,1fr);gap:22px;background:var(--ds);}
 .ic label{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold-dim);letter-spacing:.16em;text-transform:uppercase;display:block;margin-bottom:5px;}
 .ic p{font-size:14px;color:var(--cream-dim);font-weight:300;line-height:1.6;}
 footer{padding:18px 48px;border-top:1px solid var(--db);display:flex;align-items:center;justify-content:space-between;font-family:'DM Mono',monospace;font-size:10px;color:var(--gold-dim);}
+/* PAYMENT MODAL */
 .mov{position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(10px);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;}
 .mov.on{opacity:1;pointer-events:all;}
 .modal{background:var(--dc);border:1px solid var(--db);border-radius:2px;width:420px;max-width:95vw;padding:36px 32px;position:relative;transform:translateY(18px);transition:transform .3s;}
@@ -120,6 +135,7 @@ footer{padding:18px 48px;border-top:1px solid var(--db);display:flex;align-items
 .rgrp input::placeholder{color:var(--gold-dim);opacity:.4;letter-spacing:.05em;}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
 .vbtn{width:100%;padding:14px;background:linear-gradient(135deg,var(--gold-dim),var(--gold));border:none;border-radius:2px;color:var(--dark);font-family:'Cinzel',serif;font-size:12px;letter-spacing:.18em;cursor:pointer;transition:all .3s;}
+/* AGREEMENT */
 .agrov{position:fixed;inset:0;background:rgba(0,0,0,.92);backdrop-filter:blur(14px);z-index:600;display:none;align-items:center;justify-content:center;padding:20px;}
 .agrov.open{display:flex;}
 #ags{background:#fff;color:#1a1a1a;width:100%;max-width:760px;max-height:90vh;overflow-y:auto;border-radius:3px;font-family:Georgia,serif;}
@@ -151,6 +167,7 @@ footer{padding:18px 48px;border-top:1px solid var(--db);display:flex;align-items
 .agb-p{background:#0D0B08;color:#C9A84C;}.agb-c{background:#fff;color:#999;border:1px solid #ddd;margin-left:auto;}
 .agft{text-align:center;padding:12px 36px;border-top:1px solid #eee;font-family:'DM Mono',monospace;font-size:9px;color:#bbb;}
 @media print{body *{visibility:hidden!important;}#ags,#ags *{visibility:visible!important;}#ags{position:fixed!important;inset:0!important;background:#fff!important;z-index:99999!important;}.np{display:none!important;}}
+/* VOICE AI */
 #vaw{position:fixed;bottom:24px;right:24px;z-index:400;}
 #vab{background:var(--dc);border:1px solid var(--db);border-radius:50px;padding:9px 18px 9px 12px;display:flex;align-items:center;gap:9px;cursor:pointer;color:var(--gold-dim);transition:all .3s;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;}
 #vab:hover,#vab.sp{border-color:var(--gold);color:var(--gold);}
@@ -189,7 +206,8 @@ footer{padding:18px 48px;border-top:1px solid var(--db);display:flex;align-items
 .lb{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:600;display:flex;align-items:center;justify-content:center;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .3s;}
 .lb.on{opacity:1;pointer-events:all;}
 .lbc{position:absolute;top:22px;right:28px;background:none;border:none;color:var(--gold-dim);font-size:28px;cursor:pointer;}
-.lbi{width:68vw;max-width:880px;aspect-ratio:16/9;background:var(--dc);border:1px solid var(--db);display:flex;align-items:center;justify-content:center;}
+.lbi{width:80vw;max-width:1000px;max-height:80vh;background:var(--dc);border:1px solid var(--db);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.lbi img{width:100%;height:100%;object-fit:contain;display:block;}
 .lbm{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--cream-dim);font-style:italic;text-align:center;padding:22px;}
 .lbcp{margin-top:14px;font-family:'DM Mono',monospace;font-size:10px;color:var(--gold-dim);letter-spacing:.14em;text-transform:uppercase;}
 @media(max-width:880px){.main{grid-template-columns:1fr;}.iband{grid-template-columns:repeat(2,1fr);}header,.hero,.galsec,.sidebar,.sbar,footer,.iband,.abar{padding-left:22px;padding-right:22px;}.hwm{display:none;}}
@@ -199,13 +217,13 @@ footer{padding:18px 48px;border-top:1px solid var(--db);display:flex;align-items
 </style>
 </head>
 <body>
-<div id="__c" style="display:none">{&quot;firm&quot;:&quot;i3d Studio&quot;,&quot;tag&quot;:&quot;Architectural Intelligence · Est. 1999 · Coimbatore&quot;,&quot;web&quot;:&quot;i3dstudio.in&quot;,&quot;upi&quot;:&quot;shakhith-1@okicici&quot;,&quot;proj&quot;:&quot;Residential Villa&quot;,&quot;ref&quot;:&quot;i3D/2026/001&quot;,&quot;loc&quot;:&quot;Coimbatore, Tamil Nadu&quot;,&quot;client&quot;:&quot;&quot;,&quot;stage&quot;:&quot;Design Development&quot;,&quot;year&quot;:&quot;2026&quot;,&quot;sub&quot;:&quot;Comprehensive architectural drawings and 3D visualizations — SmartLock protected&quot;,&quot;dtype&quot;:&quot;Architectural Drawings&quot;,&quot;i1&quot;:&quot;A residential villa project encompassing complete architectural drawings, 3D visualizations, and design documentation prepared by i3d Studio, Coimbatore.&quot;,&quot;i2&quot;:&quot;Climatically responsive design with considered spatial planning, natural light strategy, and material palette suited to the region.&quot;,&quot;i3&quot;:&quot;All drawings are in print-ready vector format. Files are delivered digitally upon payment verification via SmartLock.&quot;,&quot;i4&quot;:&quot;Prepared by i3d Studio, Coimbatore. 25+ years of architectural practice across residential, commercial and institutional projects.&quot;,&quot;vaname&quot;:&quot;Aria&quot;,&quot;vagreet&quot;:&quot;Warm &amp; Professional&quot;,&quot;vagender&quot;:&quot;female&quot;,&quot;vaauto&quot;:&quot;yes&quot;,&quot;vakey&quot;:&quot;&quot;,&quot;vagreeting&quot;:&quot;&quot;,&quot;code&quot;:&quot;&quot;,&quot;master&quot;:&quot;&quot;,&quot;pricing&quot;:[{&quot;name&quot;:&quot;Concept / Schematic Plan&quot;,&quot;cx&quot;:&quot;Standard&quot;,&quot;rate&quot;:&quot;1999&quot;},{&quot;name&quot;:&quot;Floor Plan Set — Ground + First Floor&quot;,&quot;cx&quot;:&quot;Standard&quot;,&quot;rate&quot;:&quot;3999&quot;},{&quot;name&quot;:&quot;Full Plans + Elevation Set&quot;,&quot;cx&quot;:&quot;Detailed&quot;,&quot;rate&quot;:&quot;6999&quot;},{&quot;name&quot;:&quot;Working Drawings — Complete Set&quot;,&quot;cx&quot;:&quot;Detailed&quot;,&quot;rate&quot;:&quot;9999&quot;},{&quot;name&quot;:&quot;3D Exterior Render — Single View&quot;,&quot;cx&quot;:&quot;Standard&quot;,&quot;rate&quot;:&quot;2999&quot;},{&quot;name&quot;:&quot;3D Render Set — 4 Elevations&quot;,&quot;cx&quot;:&quot;Detailed&quot;,&quot;rate&quot;:&quot;7999&quot;}],&quot;files&quot;:[]}</div>
+<div id="__c" style="display:none">{&quot;firm&quot;:&quot;i3d Studio&quot;,&quot;tag&quot;:&quot;Architectural Intelligence · Est. 1999 · Coimbatore&quot;,&quot;web&quot;:&quot;i3dstudio.in&quot;,&quot;upi&quot;:&quot;shakhith-1@okicici&quot;,&quot;proj&quot;:&quot;testing villa&quot;,&quot;ref&quot;:&quot;i3D/2026/001&quot;,&quot;loc&quot;:&quot;Coimbatore, Tamil Nadu&quot;,&quot;client&quot;:&quot;&quot;,&quot;stage&quot;:&quot;Design Development&quot;,&quot;year&quot;:&quot;2026&quot;,&quot;sub&quot;:&quot;Comprehensive architectural drawings and 3D visualizations — SmartLock protected&quot;,&quot;dtype&quot;:&quot;3D Visualizations&quot;,&quot;i1&quot;:&quot;A residential villa project encompassing complete architectural drawings, 3D visualizations, and design documentation prepared by i3d Studio, Coimbatore.&quot;,&quot;i2&quot;:&quot;&quot;,&quot;i3&quot;:&quot;&quot;,&quot;i4&quot;:&quot;&quot;,&quot;vaname&quot;:&quot;Aria&quot;,&quot;vagreet&quot;:&quot;Warm &amp; Professional&quot;,&quot;vagender&quot;:&quot;female&quot;,&quot;vaauto&quot;:&quot;yes&quot;,&quot;vakey&quot;:&quot;&quot;,&quot;vagreeting&quot;:&quot;&quot;,&quot;code&quot;:&quot;L8KZMM&quot;,&quot;master&quot;:&quot;&quot;,&quot;pricing&quot;:[{&quot;name&quot;:&quot;Concept / Schematic Plan&quot;,&quot;cx&quot;:&quot;Standard&quot;,&quot;rate&quot;:&quot;10&quot;}],&quot;files&quot;:[]}</div>
 <script>
 var C={},selectedPkg=null,pricing=[],files=[];
 try{var _e=document.getElementById('__c');if(_e){C=JSON.parse(_e.textContent||'{}');pricing=C.pricing||[];files=C.files||[];}}catch(e){console.error('Config:',e);}
 </script>
 
-<div class="ribbon" id="rib">✓ &nbsp; PAYMENT VERIFIED — GOOGLE DRIVE LINKS NOW ACTIVE</div>
+<div class="ribbon" id="rib">Payment Verified — Google Drive Links Now Active</div>
 <header>
   <div class="logo" id="hlogo">i3d Studio<span>Architectural Intelligence · Est. 1999 · Coimbatore</span></div>
   <div class="hmeta" id="hmet">PROJECT ARCHIVE</div>
@@ -217,8 +235,8 @@ try{var _e=document.getElementById('__c');if(_e){C=JSON.parse(_e.textContent||'{
   <p class="hsub" id="hsub">SmartLock protected</p>
   <div class="dbadge" id="dtyp">Architectural Drawings</div>
   <div class="mrow">
-    <div class="mi"><label>Location</label><span id="mloc">—</span></div>
-    <div class="mi"><label>Stage</label><span id="mstg">—</span></div>
+    <div class="mi"><label>Location</label><span id="mloc">-</span></div>
+    <div class="mi"><label>Stage</label><span id="mstg">-</span></div>
     <div class="mi"><label>Year</label><span id="myr">2026</span></div>
     <div class="mi" id="mclw" style="display:none"><label>Client</label><span id="mcl"></span></div>
     <div class="mi"><label>Prepared by</label><span id="mfm">i3d Studio</span></div>
@@ -231,7 +249,7 @@ try{var _e=document.getElementById('__c');if(_e){C=JSON.parse(_e.textContent||'{
 </div>
 <div class="abar">
   <div class="abar-t">Generate a signed agreement before or after payment.</div>
-  <button class="abar-btn" onclick="openAgr(false)">⬡ Generate Draft Agreement</button>
+  <button class="abar-btn" onclick="openAgr(false)">Generate Draft Agreement</button>
 </div>
 <div class="main">
   <div class="galsec">
@@ -240,38 +258,8 @@ try{var _e=document.getElementById('__c');if(_e){C=JSON.parse(_e.textContent||'{
       <button class="gtab on" onclick="swTab('p1',this)">Set A</button>
       <button class="gtab" onclick="swTab('p2',this)">Set B</button>
     </div>
-    <div class="tpanel on" id="tab-p1">
-      <div class="igrid">
-        <div class="icard wide" onclick="openLB('Document 01')"><div class="iph">
-          <svg viewBox="0 0 500 200"><rect x="20" y="20" width="460" height="160" fill="none" stroke="#C9A84C" stroke-width="2"/><rect x="20" y="20" width="140" height="80" fill="none" stroke="#C9A84C" stroke-width="1"/><rect x="160" y="20" width="120" height="80" fill="none" stroke="#C9A84C" stroke-width="1"/><rect x="280" y="20" width="200" height="80" fill="none" stroke="#C9A84C" stroke-width="1"/><rect x="20" y="100" width="200" height="80" fill="none" stroke="#C9A84C" stroke-width="1"/><rect x="220" y="100" width="100" height="80" fill="none" stroke="#C9A84C" stroke-width="1"/><rect x="320" y="100" width="160" height="80" fill="none" stroke="#C9A84C" stroke-width="1"/><text x="250" y="192" text-anchor="middle" fill="#7A6130" font-size="8" font-family="monospace">DOCUMENT 01 — PREVIEW</text></svg>
-          <div class="iblur" id="b1"></div><div class="iwm" id="w1">i3d Studio</div><div class="ilbl">DOC 01</div>
-        </div></div>
-        <div class="icard" onclick="openLB('Document 02')"><div class="iph">
-          <svg viewBox="0 0 300 220"><rect x="20" y="20" width="260" height="180" fill="none" stroke="#C9A84C" stroke-width="1.5"/><rect x="20" y="20" width="130" height="90" fill="none" stroke="#C9A84C" stroke-width="1"/><rect x="150" y="20" width="130" height="90" fill="none" stroke="#C9A84C" stroke-width="1"/><rect x="20" y="110" width="80" height="90" fill="none" stroke="#C9A84C" stroke-width="1"/><rect x="100" y="110" width="180" height="90" fill="none" stroke="#C9A84C" stroke-width="1"/></svg>
-          <div class="iblur" id="b2"></div><div class="iwm" id="w2">i3d Studio</div><div class="ilbl">DOC 02</div>
-        </div></div>
-        <div class="icard" onclick="openLB('Document 03')"><div class="iph">
-          <svg viewBox="0 0 300 220"><rect x="20" y="20" width="260" height="180" fill="none" stroke="#C9A84C" stroke-width="1.5" stroke-dasharray="8,4"/><rect x="60" y="60" width="180" height="120" fill="rgba(201,168,76,0.06)" stroke="#C9A84C" stroke-width="1.5"/><text x="150" y="130" text-anchor="middle" fill="#7A6130" font-size="7" font-family="monospace">DOC 03</text></svg>
-          <div class="iblur" id="b3"></div><div class="iwm" id="w3">i3d Studio</div><div class="ilbl">DOC 03</div>
-        </div></div>
-      </div>
-    </div>
-    <div class="tpanel" id="tab-p2">
-      <div class="igrid">
-        <div class="icard wide" onclick="openLB('Document 04')"><div class="iph">
-          <svg viewBox="0 0 500 200"><rect x="50" y="60" width="400" height="110" fill="rgba(201,168,76,0.05)" stroke="#C9A84C" stroke-width="1.5"/><rect x="100" y="20" width="300" height="60" fill="rgba(201,168,76,0.04)" stroke="#C9A84C" stroke-width="1"/><line x1="100" y1="20" x2="400" y2="20" stroke="#C9A84C" stroke-width="1.5"/><text x="250" y="192" text-anchor="middle" fill="#7A6130" font-size="8" font-family="monospace">DOC 04 — PREVIEW</text></svg>
-          <div class="iblur" id="b4"></div><div class="iwm" id="w4">i3d Studio</div><div class="ilbl">DOC 04</div>
-        </div></div>
-        <div class="icard" onclick="openLB('Document 05')"><div class="iph">
-          <svg viewBox="0 0 300 220"><rect x="30" y="70" width="240" height="120" fill="rgba(201,168,76,0.05)" stroke="#C9A84C" stroke-width="1.2"/><rect x="70" y="30" width="160" height="60" fill="rgba(201,168,76,0.04)" stroke="#C9A84C" stroke-width="1"/></svg>
-          <div class="iblur" id="b5"></div><div class="iwm" id="w5">i3d Studio</div><div class="ilbl">DOC 05</div>
-        </div></div>
-        <div class="icard" onclick="openLB('Document 06')"><div class="iph">
-          <svg viewBox="0 0 300 220"><rect x="40" y="80" width="220" height="110" fill="rgba(201,168,76,0.05)" stroke="#C9A84C" stroke-width="1.2"/><rect x="80" y="40" width="140" height="60" fill="rgba(201,168,76,0.04)" stroke="#C9A84C" stroke-width="1"/></svg>
-          <div class="iblur" id="b6"></div><div class="iwm" id="w6">i3d Studio</div><div class="ilbl">DOC 06</div>
-        </div></div>
-      </div>
-    </div>
+    <div class="tpanel on" id="tab-p1"><div class="igrid" id="galA"></div></div>
+    <div class="tpanel" id="tab-p2"><div class="igrid" id="galB"></div></div>
   </div>
   <div class="sidebar">
     <div class="slabel">Secure Access</div>
@@ -282,13 +270,13 @@ try{var _e=document.getElementById('__c');if(_e){C=JSON.parse(_e.textContent||'{
         </div>
         <div class="ltitle">SmartLock Active</div>
         <div class="lsub">Select · Pay · Download</div>
-        <div class="pthint">Select your package ↓</div>
+        <div class="pthint">Select your package</div>
         <div class="ptable"><div class="pthdr"><span>Package</span><span>Level</span><span style="text-align:right">Charge</span></div><div id="ptrows"></div></div>
         <div class="selb">
-          <div><div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--gold-dim);letter-spacing:.12em;text-transform:uppercase;">Selected</div><div class="seln" id="seln">— choose above —</div></div>
-          <div><div class="sela" id="sela" style="color:var(--gold-dim)">₹ —</div><span class="selg">Incl. 18% GST</span></div>
+          <div><div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--gold-dim);letter-spacing:.12em;text-transform:uppercase;">Selected</div><div class="seln" id="seln">- choose above -</div></div>
+          <div><div class="sela" id="sela" style="color:var(--gold-dim)">Rs -</div><span class="selg">Incl. 18% GST</span></div>
         </div>
-        <div class="fwrap"><div class="flbl">Files <span id="fcnt"></span></div><div id="flist"></div></div>
+        <div class="fwrap"><div class="flbl" id="flbl">Files locked</div><div id="flist"></div></div>
         <button class="paybtn" onclick="openPay()">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
           Unlock &amp; Download
@@ -303,24 +291,25 @@ try{var _e=document.getElementById('__c');if(_e){C=JSON.parse(_e.textContent||'{
       <div class="sucp" id="unlockedSt">
         <div class="sicon"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#7BF09C" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg></div>
         <div class="stitle">Access Granted</div>
-        <div class="ssub">Google Drive links are active</div>
+        <div class="ssub" id="unlockSub">Google Drive links are active</div>
         <div id="dllist"></div>
-        <button class="fagrbtn" onclick="openAgr(true)">✓ Download Final Agreement PDF</button>
+        <button class="fagrbtn" onclick="openAgr(true)">Download Final Agreement PDF</button>
       </div>
     </div>
   </div>
 </div>
 <div class="iband">
-  <div class="ic"><label>Scope &amp; Brief</label><p id="ii1">—</p></div>
-  <div class="ic"><label>Design Approach</label><p id="ii2">—</p></div>
-  <div class="ic"><label>Deliverable Notes</label><p id="ii3">—</p></div>
-  <div class="ic"><label>About the Firm</label><p id="ii4">—</p></div>
+  <div class="ic"><label>Scope &amp; Brief</label><p id="ii1">-</p></div>
+  <div class="ic"><label>Design Approach</label><p id="ii2">-</p></div>
+  <div class="ic"><label>Deliverable Notes</label><p id="ii3">-</p></div>
+  <div class="ic"><label>About the Firm</label><p id="ii4">-</p></div>
 </div>
-<footer><span id="ffl">© 2026 i3d Studio</span><span id="ffr">i3d SmartLock v3</span></footer>
+<footer><span id="ffl">2026 i3d Studio</span><span id="ffr">i3d SmartLock v3</span></footer>
 
+<!-- PAYMENT MODAL -->
 <div class="mov" id="payMod">
   <div class="modal">
-    <button class="mcls" onclick="closePay()">×</button>
+    <button class="mcls" onclick="closePay()">x</button>
     <div id="payFm">
       <div class="mtit">Secure Payment</div>
       <div class="msub">Scan · Pay · WhatsApp Code · Unlock</div>
@@ -340,38 +329,38 @@ try{var _e=document.getElementById('__c');if(_e){C=JSON.parse(_e.textContent||'{
           <rect x="98" y="98" width="8" height="8" fill="#0D0B08"/><rect x="122" y="98" width="8" height="8" fill="#0D0B08"/>
           <rect x="98" y="110" width="8" height="8" fill="#0D0B08"/><rect x="110" y="110" width="8" height="8" fill="#0D0B08"/>
           <rect x="98" y="122" width="8" height="8" fill="#0D0B08"/><rect x="110" y="122" width="8" height="8" fill="#0D0B08"/><rect x="122" y="122" width="8" height="8" fill="#0D0B08"/>
-          <text x="74" y="76" text-anchor="middle" font-family="monospace" font-size="8" fill="#C9A84C" id="qrl">GPay</text>
         </svg>
       </div>
       <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:.14em;color:var(--gold);text-align:center;margin-bottom:4px;" id="pfirm">i3d Studio</div>
       <div class="upiid" id="pupi">shakhith-1@okicici</div>
-      <div class="cpyn" onclick="cpUpi()">⊕ tap to copy</div>
-      <div class="amtr"><span>Amount to Pay</span><strong id="pamt">₹ —</strong></div>
+      <div class="cpyn" onclick="cpUpi()">tap to copy</div>
+      <div class="amtr"><span>Amount to Pay</span><strong id="pamt">Rs -</strong></div>
       <div class="rgrp"><label>Your Name</label><input type="text" id="nmin" placeholder="Full name" style="text-align:left;letter-spacing:.03em;text-transform:none;"/></div>
       <div class="rgrp"><label>WhatsApp Access Code</label><input type="text" id="coin" placeholder="6-digit code" maxlength="10" style="font-size:18px;letter-spacing:.4em;"/></div>
-      <button class="vbtn" onclick="verify()">Verify &amp; Unlock Files</button>
-      <div style="margin-top:12px;font-family:'DM Mono',monospace;font-size:9px;color:var(--gold-dim);text-align:center;line-height:1.9;">Pay via Google Pay · PhonePe · Paytm · Any UPI<br>WhatsApp code sent after payment confirmed</div>
+      <button class="vbtn" onclick="verify()">Verify and Unlock Files</button>
+      <div style="margin-top:12px;font-family:'DM Mono',monospace;font-size:9px;color:var(--gold-dim);text-align:center;line-height:1.9;">Pay via Google Pay · PhonePe · Any UPI app<br>WhatsApp code sent after payment confirmed</div>
     </div>
     <div id="verMsg" style="display:none;text-align:center;padding:28px 0;">
-      <div style="font-family:'Cinzel',serif;font-size:14px;color:var(--cream);margin-bottom:10px;">Verifying…</div>
-      <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--gold-dim);">Please wait a moment</div>
+      <div style="font-family:'Cinzel',serif;font-size:14px;color:var(--cream);margin-bottom:10px;">Verifying...</div>
     </div>
   </div>
 </div>
 
+<!-- LIGHTBOX -->
 <div class="lb" id="lbx">
-  <button class="lbc" onclick="closeLB()">×</button>
-  <div class="lbi"><div class="lbm">🔒 Full-resolution protected<br><span style="font-size:13px;opacity:.6">Unlock via SmartLock to access</span></div></div>
+  <button class="lbc" onclick="closeLB()">x</button>
+  <div class="lbi" id="lbimg"><div class="lbm">Full-resolution protected - Unlock to access</div></div>
   <div class="lbcp" id="lbcp"></div>
 </div>
 
+<!-- AGREEMENT -->
 <div class="agrov" id="agrov">
 <div id="ags">
   <div class="agh"><div class="agfm" id="agfm">i3d Studio<span></span></div><div class="agrh" id="agrh">PROJECT ARCHIVE</div></div>
   <div class="agbd">
     <div class="agt">Letter of Engagement</div>
     <div class="agst">Professional Architectural Services Agreement</div>
-    <div style="text-align:center;margin-bottom:18px;"><span class="agsp" id="agsp">DRAFT — PENDING PAYMENT</span></div>
+    <div style="text-align:center;margin-bottom:18px;"><span class="agsp" id="agsp">DRAFT - PENDING PAYMENT</span></div>
     <div class="agsc"><div class="agsc-t">Parties</div>
       <div class="agrow"><span class="aglb">Service Provider</span><span class="agvl" id="agprov">i3d Studio</span></div>
       <div class="agrow"><span class="aglb">Client Name</span><span class="agvl"><input id="agcn" style="border:none;border-bottom:1px solid #ccc;width:280px;font-family:Georgia,serif;font-size:13px;outline:none;" placeholder="Client full name"/></span></div>
@@ -385,37 +374,42 @@ try{var _e=document.getElementById('__c');if(_e){C=JSON.parse(_e.textContent||'{
       <div class="agrow"><span class="aglb">Stage</span><span class="agvl" id="agstg"></span></div>
       <div class="agrow"><span class="aglb">Deliverable Type</span><span class="agvl" id="agdt2"></span></div>
     </div>
-    <div class="agsc"><div class="agsc-t">Scope &amp; Charges</div>
-      <table class="agtbl"><thead><tr><th>#</th><th>Package</th><th>Level</th><th style="text-align:right">Charge (₹)</th></tr></thead><tbody id="agpr"></tbody><tfoot><tr class="tr"><td colspan="3" style="text-align:right;font-family:'DM Mono',monospace;font-size:9px;">TOTAL</td><td style="text-align:right;font-size:14px;" id="agtt">₹ —</td></tr></tfoot></table>
-      <div class="agrow"><span class="aglb">Payment Mode</span><span class="agvl">UPI · Google Pay · PhonePe</span></div>
+    <div class="agsc"><div class="agsc-t">Scope and Charges</div>
+      <table class="agtbl">
+        <thead><tr><th>#</th><th>Package Description</th><th>Level</th><th style="text-align:right">Charge (Rs)</th></tr></thead>
+        <tbody id="agpr"></tbody>
+        <tfoot><tr class="tr"><td colspan="3" style="text-align:right;font-family:'DM Mono',monospace;font-size:9px;">TOTAL</td><td style="text-align:right;font-size:14px;" id="agtt">Rs -</td></tr></tfoot>
+      </table>
+      <div class="agrow"><span class="aglb">Payment Mode</span><span class="agvl">UPI - Google Pay - PhonePe</span></div>
       <div class="agrow"><span class="aglb">UPI ID</span><span class="agvl" id="agupi"></span></div>
     </div>
     <div class="agsc"><div class="agsc-t">Files to be Delivered</div>
-      <table class="agtbl"><thead><tr><th>#</th><th>Filename</th><th>Format</th></tr></thead><tbody id="agfr"></tbody></table>
+      <table class="agtbl"><thead><tr><th>#</th><th>Filename</th><th>Format</th><th>Size</th></tr></thead><tbody id="agfr"></tbody></table>
     </div>
-    <div class="agsc"><div class="agsc-t">Terms &amp; Conditions</div>
+    <div class="agsc"><div class="agsc-t">Terms and Conditions</div>
       <div class="agcl">1. All deliverables are protected via i3d SmartLock. Access is granted upon receipt and verification of full payment by i3d Studio.</div>
       <div class="agcl">2. The quoted package covers only the specific deliverables listed herein. Additional work beyond this scope will be quoted separately.</div>
-      <div class="agcl">3. Intellectual property of all drawings remains with i3d Studio until full payment is received. Upon payment, a non-exclusive license to use the deliverables for the stated project is granted.</div>
-      <div class="agcl">4. Deliverables are provided in digital format via Google Drive. Print, fabrication, or construction based on these drawings is the sole responsibility of the client.</div>
+      <div class="agcl">3. Intellectual property of all drawings remains with i3d Studio until full payment is received. Upon payment, a non-exclusive license for the stated project is granted to the client.</div>
+      <div class="agcl">4. Deliverables are provided in digital format via Google Drive. Print or construction based on these drawings is the sole responsibility of the client.</div>
       <div class="agcl">5. This agreement is binding upon digital acknowledgement or signature by both parties.</div>
     </div>
     <div class="agsc np"><div class="agsc-t">Digital Signatures</div>
       <div class="agsr">
-        <div><div class="agsl">Client Signature</div><canvas class="agsc2" id="cSig" width="310" height="76"></canvas><div style="font-size:9px;color:#aaa;margin-top:4px;font-family:'DM Mono',monospace;">Draw above · <span style="cursor:pointer;color:#C9A84C;" onclick="clrSig('cSig')">Clear</span></div></div>
-        <div><div class="agsl">Architect — i3d Studio</div><canvas class="agsc2" id="aSig" width="310" height="76"></canvas><div style="font-size:9px;color:#aaa;margin-top:4px;font-family:'DM Mono',monospace;">Draw above · <span style="cursor:pointer;color:#C9A84C;" onclick="clrSig('aSig')">Clear</span></div></div>
+        <div><div class="agsl">Client Signature</div><canvas class="agsc2" id="cSig" width="310" height="76"></canvas><div style="font-size:9px;color:#aaa;margin-top:4px;font-family:'DM Mono',monospace;">Draw above - <span style="cursor:pointer;color:#C9A84C;" onclick="clrSig('cSig')">Clear</span></div></div>
+        <div><div class="agsl">Architect - i3d Studio</div><canvas class="agsc2" id="aSig" width="310" height="76"></canvas><div style="font-size:9px;color:#aaa;margin-top:4px;font-family:'DM Mono',monospace;">Draw above - <span style="cursor:pointer;color:#C9A84C;" onclick="clrSig('aSig')">Clear</span></div></div>
       </div>
     </div>
     <div class="agsr" style="margin-top:24px;">
-      <div><div class="agsl">Client Signature &amp; Date</div><div style="height:56px;border-bottom:1px solid #999;margin-bottom:7px;"></div><div style="font-size:11px;color:#555;">_______________________</div></div>
-      <div><div class="agsl">Architect — i3d Studio</div><div style="height:56px;border-bottom:1px solid #999;margin-bottom:7px;"></div><div style="font-size:11px;color:#555;" id="aarch">Shakhith A M · i3d Studio</div></div>
+      <div><div class="agsl">Client Signature and Date</div><div style="height:56px;border-bottom:1px solid #999;margin-bottom:7px;"></div><div style="font-size:11px;color:#555;">_______________________</div></div>
+      <div><div class="agsl">Architect - i3d Studio</div><div style="height:56px;border-bottom:1px solid #999;margin-bottom:7px;"></div><div style="font-size:11px;color:#555;" id="aarch">Shakhith A M - i3d Studio</div></div>
     </div>
   </div>
-  <div class="agac np"><button class="agb agb-p" onclick="printAgr()">⬇ Download / Print PDF</button><button class="agb agb-c" onclick="closeAgr()">Close</button></div>
-  <div class="agft">Generated by i3d SmartLock · i3dstudio.in · Binding upon signature by both parties</div>
+  <div class="agac np"><button class="agb agb-p" onclick="printAgr()">Download / Print PDF</button><button class="agb agb-c" onclick="closeAgr()">Close</button></div>
+  <div class="agft">Generated by i3d SmartLock · i3dstudio.in</div>
 </div>
 </div>
 
+<!-- VOICE AI -->
 <div id="vaw">
   <button id="vab" onclick="togVA()">
     <div id="vorb"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg></div>
@@ -425,56 +419,125 @@ try{var _e=document.getElementById('__c');if(_e){C=JSON.parse(_e.textContent||'{
     <div id="vaph">
       <div id="vav"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg></div>
       <div><div id="van">Aria</div><div id="vast">i3d Studio Assistant</div></div>
-      <button id="vacl" onclick="closeVA()">×</button>
+      <button id="vacl" onclick="closeVA()">x</button>
     </div>
     <div id="vawv"><span></span><span></span><span></span><span></span><span></span></div>
     <div id="vac"></div>
     <div id="vaq">
-      <button onclick="sendQ('What drawings are included?')">What drawings?</button>
+      <button onclick="sendQ('What drawings are included?')">Drawings?</button>
       <button onclick="sendQ('Explain the pricing.')">Pricing</button>
       <button onclick="sendQ('How do I pay and get access?')">How to pay?</button>
-      <button onclick="sendQ('How do the Google Drive links work?')">File access?</button>
+      <button onclick="sendQ('How do the Google Drive links work?')">Files?</button>
     </div>
     <div id="vair">
-      <input id="vai" placeholder="Ask Aria anything…" onkeydown="if(event.key==='Enter')sendMsg()"/>
+      <input id="vai" placeholder="Ask Aria..." onkeydown="if(event.key==='Enter')sendMsg()"/>
       <button id="vasb" onclick="sendMsg()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
     </div>
   </div>
 </div>
 
 <script>
-function ss(id,v,p){var e=document.getElementById(id);if(e)e[p||'textContent']=v;}
+function ss(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
+
 window.addEventListener('DOMContentLoaded',function(){
-  // Populate from config
+  // Populate header and hero
   var logo=document.getElementById('hlogo');
-  if(logo)logo.innerHTML=C.firm+'<span>'+(C.tag||'')+'</span>';
+  if(logo)logo.innerHTML=(C.firm||'i3d Studio')+'<span>'+(C.tag||'')+'</span>';
   ss('hmet','PROJECT ARCHIVE\n'+(C.ref||''));
   ss('hwm',(C.proj||'Project').toUpperCase());
   var tagEl=document.getElementById('ptag');
-  if(tagEl)tagEl.innerHTML=(C.firm||'i3d Studio')+' · '+(C.dtype||'Architectural Drawings');
+  if(tagEl)tagEl.innerHTML=(C.firm||'i3d Studio')+' . '+(C.dtype||'Architectural Drawings');
   var words=(C.proj||'Project').trim().split(' '),last=words.pop(),rest=words.join(' ');
   var h1=document.getElementById('htitle');
   if(h1)h1.innerHTML=(rest?rest+' ':'')+'<em>'+last+'</em>';
-  ss('hsub',C.sub||'');
-  ss('dtyp',C.dtype||'Architectural Drawings');
-  ss('mloc',C.loc||'—');ss('mstg',C.stage||'—');ss('myr',C.year||'2026');ss('mfm',C.firm||'i3d Studio');
+  ss('hsub',C.sub||'');ss('dtyp',C.dtype||'Architectural Drawings');
+  ss('mloc',C.loc||'-');ss('mstg',C.stage||'-');ss('myr',C.year||'2026');ss('mfm',C.firm||'i3d Studio');
   if(C.client){ss('mcl',C.client);var cw=document.getElementById('mclw');if(cw)cw.style.display='';}
-  for(var i=1;i<=6;i++){var w=document.getElementById('w'+i);if(w)w.textContent=(C.firm||'i3d Studio')+' — Confidential';}
   var fc=files.filter(function(f){return f.name;}).length;
-  ss('psb',fc+' file'+(fc!==1?'s':'')+' · '+(C.dtype||'')+ ' · SmartLock protected');
+  ss('psb',fc+' file'+(fc!==1?'s':'')+' . '+(C.dtype||'')+' . SmartLock protected');
   ss('ii1',C.i1||'');ss('ii2',C.i2||'');ss('ii3',C.i3||'');ss('ii4',C.i4||'');
-  ss('ffl','© '+(C.year||'2026')+' '+(C.firm||'i3d Studio')+(C.web?' · '+C.web:''));
-  ss('ffr',(C.ref||'')+' · i3d SmartLock v3');
-  ss('plw','· '+(C.firm||'i3d Studio')+(C.web?' · '+C.web:''));
+  ss('ffl',(C.year||'2026')+' '+(C.firm||'i3d Studio')+(C.web?' . '+C.web:''));
+  ss('ffr',(C.ref||'')+' . i3d SmartLock v3');
+  ss('plw','. '+(C.firm||'i3d Studio')+(C.web?' . '+C.web:''));
   ss('pupi',C.upi||'your-upi@ybl');ss('pfirm',C.firm||'i3d Studio');
-  var qrl=document.getElementById('qrl');if(qrl)qrl.textContent=C.upi||'GPay';
-  var cpn=document.querySelector('.cpyn');if(cpn)cpn.textContent='⊕ tap to copy · '+(C.upi||'');
-  renderPricing();renderFiles();
+  var cpn=document.querySelector('.cpyn');if(cpn)cpn.textContent='tap to copy . '+(C.upi||'');
+  renderPricing();renderGallery();renderFiles();
   initVA();
   document.getElementById('agrov').addEventListener('click',function(e){if(e.target.id==='agrov')closeAgr();});
   document.getElementById('payMod').addEventListener('click',function(e){if(e.target.id==='payMod')closePay();});
   document.getElementById('lbx').addEventListener('click',function(e){if(e.target.id==='lbx')closeLB();});
 });
+
+/* GALLERY — shows actual file images blurred */
+var _unlocked=false;
+function renderGallery(){
+  var allFiles=files.filter(function(f){return f.name;});
+  var halfA=Math.ceil(allFiles.length/2);
+  var setA=allFiles.slice(0,halfA);
+  var setB=allFiles.slice(halfA);
+  buildGalGrid('galA',setA);
+  buildGalGrid('galB',setB.length>0?setB:setA);
+  // Update tab labels
+  var tabs=document.querySelectorAll('.gtab');
+  if(tabs[0])tabs[0].textContent=setA.length>0?'Set A ('+setA.length+')':'Set A';
+  if(tabs[1])tabs[1].textContent=setB.length>0?'Set B ('+setB.length+')':'All Files';
+}
+function buildGalGrid(gridId,fileSet){
+  var grid=document.getElementById(gridId);if(!grid)return;grid.innerHTML='';
+  if(fileSet.length===0){
+    grid.innerHTML='<div style="grid-column:span 2;padding:40px;text-align:center;font-family:DM Mono,monospace;font-size:10px;color:var(--gold-dim);">No files in this set</div>';
+    return;
+  }
+  fileSet.forEach(function(f,i){
+    var isWide=i===0&&fileSet.length>1;
+    var card=document.createElement('div');
+    card.className='icard'+(isWide?' wide':'');
+    card.onclick=function(){openLB(f,i);};
+    // Use actual image URL if it's an image format
+    var isImg=f.fmt&&['JPG','PNG','SVG'].indexOf(f.fmt.toUpperCase())>=0;
+    var imgHtml='';
+    if(isImg&&f.url){
+      // Convert Google Drive share link to direct view link
+      var imgUrl=gdriveDirect(f.url);
+      imgHtml='<img src="'+imgUrl+'" alt="'+f.name+'" onerror="this.style.display=\'none\'">';
+    } else {
+      imgHtml='<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="360" height="260" fill="none" stroke="#C9A84C" stroke-width="1.5"/><rect x="40" y="40" width="160" height="120" fill="none" stroke="#C9A84C" stroke-width="1"/><rect x="210" y="40" width="150" height="120" fill="none" stroke="#C9A84C" stroke-width="1"/><rect x="40" y="170" width="100" height="90" fill="none" stroke="#C9A84C" stroke-width="1"/><rect x="150" y="170" width="210" height="90" fill="none" stroke="#C9A84C" stroke-width="1"/></svg>';
+    }
+    card.innerHTML='<div class="iph">'
+      +imgHtml
+      +'<div class="iblur" id="gb_'+gridId+'_'+i+'"></div>'
+      +'<div class="iwm" id="gw_'+gridId+'_'+i+'">'+(C.firm||'i3d Studio')+' - Confidential</div>'
+      +'<div class="ilbl">'+f.name.toUpperCase()+'</div>'
+      +'</div>';
+    grid.appendChild(card);
+  });
+}
+function gdriveDirect(url){
+  // Convert share URL to thumbnail/preview URL
+  var m=url.match(/\/file\/d\/([^\/]+)/);
+  if(m) return 'https://drive.google.com/thumbnail?id='+m[1]+'&sz=w800';
+  return url;
+}
+function swTab(id,btn){
+  document.querySelectorAll('.gtab').forEach(function(b){b.classList.remove('on');});
+  document.querySelectorAll('.tpanel').forEach(function(p){p.classList.remove('on');});
+  btn.classList.add('on');
+  var panel=document.getElementById('tab-'+id);if(panel)panel.classList.add('on');
+}
+function openLB(f,i){
+  var lbi=document.getElementById('lbimg');
+  ss('lbcp',f.name.toUpperCase()+' . '+f.fmt+(f.size?' . '+f.size:''));
+  if(_unlocked&&f.url){
+    var imgUrl=gdriveDirect(f.url);
+    lbi.innerHTML='<img src="'+imgUrl+'" alt="'+f.name+'" style="max-width:100%;max-height:80vh;object-fit:contain;">';
+  } else {
+    lbi.innerHTML='<div class="lbm">Protected - Enter WhatsApp code to unlock full resolution</div>';
+  }
+  document.getElementById('lbx').classList.add('on');
+}
+function closeLB(){document.getElementById('lbx').classList.remove('on');}
+
+/* PRICING */
 var CX={Standard:'cx-s',Detailed:'cx-d',Complex:'cx-c'};
 function renderPricing(){
   var c=document.getElementById('ptrows');if(!c)return;c.innerHTML='';
@@ -482,7 +545,7 @@ function renderPricing(){
     if(!p.name||!p.rate)return;
     var r=document.createElement('div');r.className='ptrow';r.id='pr_'+i;
     r.onclick=function(){selPkg(i,p);};
-    r.innerHTML='<span class="ptn">'+p.name+'</span><span><span class="ptcx '+(CX[p.cx]||'cx-s')+'">'+p.cx+'</span></span><span class="pta">₹'+Number(p.rate).toLocaleString('en-IN')+'</span>';
+    r.innerHTML='<span class="ptn">'+p.name+'</span><span><span class="ptcx '+(CX[p.cx]||'cx-s')+'">'+p.cx+'</span></span><span class="pta">Rs '+Number(p.rate).toLocaleString('en-IN')+'</span>';
     c.appendChild(r);
   });
 }
@@ -491,23 +554,28 @@ function selPkg(i,p){
   var el=document.getElementById('pr_'+i);if(el)el.classList.add('sel');
   selectedPkg=p;
   ss('seln',p.name);
-  var sa=document.getElementById('sela');if(sa){sa.textContent='₹'+Number(p.rate).toLocaleString('en-IN');sa.style.color='var(--gold)';}
-  ss('pamt','₹'+Number(p.rate).toLocaleString('en-IN'));
+  var sa=document.getElementById('sela');if(sa){sa.textContent='Rs '+Number(p.rate).toLocaleString('en-IN');sa.style.color='var(--gold)';}
+  ss('pamt','Rs '+Number(p.rate).toLocaleString('en-IN'));
 }
+
+/* FILES */
 function renderFiles(){
   var c=document.getElementById('flist');if(!c)return;c.innerHTML='';
   var fc=files.filter(function(f){return f.name;});
-  var cnt=document.getElementById('fcnt');if(cnt)cnt.textContent='('+fc.length+' file'+(fc.length!==1?'s':'')+' — locked)';
+  var lbl=document.getElementById('flbl');
+  if(lbl)lbl.textContent=fc.length+' file'+(fc.length!==1?'s':'')+' - locked until payment';
   fc.forEach(function(f,i){
     var div=document.createElement('div');div.className='fitem';div.id='fi_'+i;
     div.innerHTML='<div class="finn blurred" id="fn_'+i+'">'
       +'<div class="ficon">'+(f.fmt||'PDF')+'</div>'
-      +'<span class="fname">'+f.name+'</span>'
-      +'<a class="flink" id="fl_'+i+'" href="'+(f.url||'#')+'" target="_blank" rel="noopener">↗ Open</a>'
-      +'</div><span class="flock" id="fk_'+i+'">🔒</span>';
+      +'<span class="fname">'+f.name+(f.size?' ('+f.size+')':'')+'</span>'
+      +'<a class="flink" id="fl_'+i+'" href="'+(f.url||'#')+'" target="_blank" rel="noopener">Open</a>'
+      +'</div><span class="flock" id="fk_'+i+'">L</span>';
     c.appendChild(div);
   });
 }
+
+/* PAYMENT */
 function openPay(){
   if(!selectedPkg){var pt=document.getElementById('ptrows');if(pt){pt.style.outline='1px solid var(--gold)';setTimeout(function(){pt.style.outline='none';},1400);}return;}
   document.getElementById('payMod').classList.add('on');
@@ -519,7 +587,7 @@ function closePay(){
 }
 function cpUpi(){
   navigator.clipboard.writeText(C.upi||'').catch(function(){});
-  var cpn=document.querySelector('.cpyn');if(cpn){cpn.textContent='✓ Copied!';setTimeout(function(){cpn.textContent='⊕ tap to copy · '+(C.upi||'');},2000);}
+  var cpn=document.querySelector('.cpyn');if(cpn){cpn.textContent='Copied!';setTimeout(function(){cpn.textContent='tap to copy . '+(C.upi||'');},2000);}
 }
 function verify(){
   var code=(document.getElementById('coin').value||'').trim().toUpperCase();
@@ -529,17 +597,23 @@ function verify(){
   var master=(C.master||'').toUpperCase();
   var valid=(C.code||'').toUpperCase();
   var dev=!master&&!valid;
-  if(!dev&&code!==master&&code!==valid){shk('coin');vSpeak('That access code is not valid. Please check the code sent via WhatsApp.');return;}
+  if(!dev&&code!==master&&code!==valid){shk('coin');vSpeak('That code is not valid. Please check the code sent via WhatsApp.');return;}
   document.getElementById('payFm').style.display='none';
   document.getElementById('verMsg').style.display='block';
   setTimeout(function(){closePay();unlock();},1800);
 }
 function shk(id){var el=document.getElementById(id);if(!el)return;el.style.borderColor='#8B2020';el.style.animation='shake .4s ease';setTimeout(function(){el.style.animation='';el.style.borderColor='';},500);}
+
+/* UNLOCK */
 function unlock(){
+  _unlocked=true;
   document.getElementById('rib').classList.add('on');
   var iw=document.getElementById('liw');
   if(iw){iw.classList.add('open');iw.innerHTML='<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7BF09C" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>';}
-  document.querySelectorAll('.iblur').forEach(function(el){el.style.backdropFilter='none';el.style.background='transparent';});
+  // Unblur gallery images
+  document.querySelectorAll('.iblur').forEach(function(el){el.classList.add('clear');});
+  document.querySelectorAll('.iwm').forEach(function(el){el.classList.add('hidden');});
+  // Unblur file list and show links
   files.filter(function(f){return f.name;}).forEach(function(f,i){
     var inn=document.getElementById('fn_'+i);
     var lnk=document.getElementById('fl_'+i);
@@ -548,41 +622,58 @@ function unlock(){
     if(lnk){lnk.classList.add('vis');if(f.url)lnk.href=f.url;}
     if(lck)lck.style.display='none';
   });
+  // Build download list
+  var dllist=document.getElementById('dllist');
+  if(dllist){dllist.innerHTML='';
+    files.filter(function(f){return f.name;}).forEach(function(f){
+      var d=document.createElement('div');d.className='dlitem';
+      d.innerHTML='<div class="dlico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7BF09C" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>'
+        +'<span class="dlname">'+f.name+(f.size?' ('+f.size+')':'')+'</span>'
+        +'<a class="dlbtn" href="'+(f.url||'#')+'" target="_blank">Open</a>';
+      dllist.appendChild(d);
+    });
+  }
   setTimeout(function(){
     var ls=document.getElementById('lockedSt');if(ls)ls.style.display='none';
     var us=document.getElementById('unlockedSt');if(us)us.classList.add('on');
   },600);
   var lc=document.getElementById('lcard');if(lc)lc.scrollIntoView({behavior:'smooth',block:'center'});
   var pkg=selectedPkg;
-  var msg=pkg?'Wonderful! '+pkg.name+' is now unlocked. Your Google Drive links are active — click Open next to each file. Thank you for working with '+(C.firm||'i3d Studio')+'!':'Files unlocked! Thank you for your payment.';
+  var msg=pkg?'Wonderful! '+pkg.name+' is now unlocked. Your Google Drive links are active. Thank you for working with '+(C.firm||'i3d Studio')+'!':'Files unlocked! Thank you.';
   setTimeout(function(){vSpeak(msg);addVM('assistant',msg);openVA();},1000);
 }
-function swTab(id,btn){
-  document.querySelectorAll('.gtab').forEach(function(b){b.classList.remove('on');});
-  document.querySelectorAll('.tpanel').forEach(function(p){p.classList.remove('on');});
-  btn.classList.add('on');
-  var panel=document.getElementById('tab-'+id);if(panel)panel.classList.add('on');
-}
-function openLB(n){ss('lbcp',n);document.getElementById('lbx').classList.add('on');}
-function closeLB(){document.getElementById('lbx').classList.remove('on');}
+
+/* AGREEMENT */
 function openAgr(isFinal){
   var agf=document.getElementById('agfm');
   if(agf){agf.childNodes[0].textContent=C.firm||'i3d Studio';var sp=agf.querySelector('span');if(sp)sp.textContent=C.web||'';}
   ss('agrh','PROJECT ARCHIVE\n'+(C.ref||''));
   var sp2=document.getElementById('agsp');
-  if(sp2){sp2.textContent=isFinal?'✓ CONFIRMED — PAYMENT RECEIVED':'DRAFT — PENDING PAYMENT';sp2.className=isFinal?'agsp fin':'agsp';}
-  ss('agprov',(C.firm||'i3d Studio')+(C.web?' · '+C.web:''));
+  if(sp2){sp2.textContent=isFinal?'CONFIRMED - PAYMENT RECEIVED':'DRAFT - PENDING PAYMENT';sp2.className=isFinal?'agsp fin':'agsp';}
+  ss('agprov',(C.firm||'i3d Studio')+(C.web?' . '+C.web:''));
   ss('agpj',C.proj||'');ss('agrn',C.ref||'');ss('agloc',C.loc||'');ss('agstg',C.stage||'');ss('agdt2',C.dtype||'');ss('agupi',C.upi||'');
   ss('agdt',new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'}));
+  // Populate ALL pricing tiers in agreement
   var tb=document.getElementById('agpr');if(tb){tb.innerHTML='';
-    var pkgs=selectedPkg?[selectedPkg]:pricing.filter(function(p){return p.name&&p.rate;}).slice(0,5);
-    var tot=0;pkgs.forEach(function(p,i){var tr=document.createElement('tr');var amt=Number(p.rate)||0;tot+=amt;
-      tr.innerHTML='<td style="color:#999;font-family:monospace;font-size:9px">'+(i+1)+'</td><td><strong>'+p.name+'</strong></td><td style="font-family:monospace;font-size:9px">'+p.cx+'</td><td style="text-align:right;font-family:monospace">₹'+amt.toLocaleString('en-IN')+'</td>';
+    var tot=0;
+    pricing.filter(function(p){return p.name&&p.rate;}).forEach(function(p,i){
+      var tr=document.createElement('tr');var amt=Number(p.rate)||0;tot+=amt;
+      tr.innerHTML='<td style="color:#999;font-family:monospace;font-size:9px">'+(i+1)+'</td>'
+        +'<td><strong>'+p.name+'</strong></td>'
+        +'<td style="font-family:monospace;font-size:9px">'+p.cx+'</td>'
+        +'<td style="text-align:right;font-family:monospace">Rs '+amt.toLocaleString('en-IN')+'</td>';
       tb.appendChild(tr);});
-    ss('agtt','₹'+tot.toLocaleString('en-IN'));}
+    // Show selected package total or sum of all
+    var dispTotal=selectedPkg?Number(selectedPkg.rate):tot;
+    ss('agtt','Rs '+dispTotal.toLocaleString('en-IN'));}
+  // File rows with size
   var fb=document.getElementById('agfr');if(fb){fb.innerHTML='';
-    files.filter(function(f){return f.name;}).forEach(function(f,i){var tr=document.createElement('tr');
-      tr.innerHTML='<td style="color:#999;font-family:monospace;font-size:9px">'+(i+1)+'</td><td><strong>'+f.name+'</strong></td><td style="font-family:monospace;font-size:9px">'+f.fmt+'</td>';
+    files.filter(function(f){return f.name;}).forEach(function(f,i){
+      var tr=document.createElement('tr');
+      tr.innerHTML='<td style="color:#999;font-family:monospace;font-size:9px">'+(i+1)+'</td>'
+        +'<td><strong>'+f.name+'</strong></td>'
+        +'<td style="font-family:monospace;font-size:9px">'+f.fmt+'</td>'
+        +'<td style="font-family:monospace;font-size:9px">'+(f.size||'-')+'</td>';
       fb.appendChild(tr);});}
   var ni=document.getElementById('nmin');var an=document.getElementById('agcn');if(ni&&ni.value&&an)an.value=ni.value;
   document.getElementById('agrov').classList.add('open');
@@ -602,20 +693,22 @@ function printAgr(){
   ['cSig','aSig'].forEach(function(id){var c=document.getElementById(id);if(c){var img=document.createElement('img');img.src=c.toDataURL();img.style.cssText='height:58px;display:block;';img.className='ps_'+id;var ex=document.querySelector('.ps_'+id);if(ex)ex.remove();c.parentNode.insertBefore(img,c);}});
   window.print();
 }
-var VA={name:'Aria',gender:'female',autoGreet:true,greetStyle:'Warm & Professional',customGreeting:'',apiKey:'',history:[],speaking:false,synth:window.speechSynthesis||null};
+
+/* VOICE AI */
+var VA={name:'Aria',gender:'female',autoGreet:true,greetStyle:'Warm & Professional',customGreeting:'',apiKey:'',history:[],synth:window.speechSynthesis||null};
 function initVA(){
   VA.name=C.vaname||'Aria';VA.gender=C.vagender||'female';VA.autoGreet=C.vaauto==='yes';
   VA.greetStyle=C.vagreet||'Warm & Professional';VA.customGreeting=C.vagreeting||'';VA.apiKey=C.vakey||'';
-  ss('van',VA.name);ss('vast',(C.firm||'i3d Studio')+' · Design Assistant');ss('vabl','Ask '+VA.name);
-  var vi=document.getElementById('vai');if(vi)vi.placeholder='Ask '+VA.name+'…';
+  ss('van',VA.name);ss('vast',(C.firm||'i3d Studio')+' . Design Assistant');ss('vabl','Ask '+VA.name);
+  var vi=document.getElementById('vai');if(vi)vi.placeholder='Ask '+VA.name+'...';
   if(window.speechSynthesis){window.speechSynthesis.getVoices();window.speechSynthesis.onvoiceschanged=function(){window.speechSynthesis.getVoices();};}
   if(VA.autoGreet)setTimeout(greetV,1400);
 }
 function greetV(){openVA();var msg=VA.customGreeting||buildG();addVM('assistant',msg);vSpeak(msg);}
 function buildG(){
   var h=new Date().getHours(),t=h<12?'Good morning':h<17?'Good afternoon':'Good evening';
-  var g={'Warm & Professional':t+'! Welcome to '+(C.firm||'i3d Studio')+"'s secure portal. I'm "+VA.name+', your design assistant. You are viewing the '+(C.proj||'project')+' deliverable package. How may I help?','Friendly & Casual':'Hey there! '+t+"! I'm "+VA.name+' from '+(C.firm||'i3d Studio')+'. I can walk you through the drawings, pricing, and file access. What would you like to know?','Formal & Corporate':t+'. Welcome to the '+(C.firm||'i3d Studio')+' professional portal. I am '+VA.name+', your dedicated assistant. How may I assist you?'};
-  return g[VA.greetStyle]||g['Warm & Professional'];
+  var styles={'Warm & Professional':t+'. Welcome to '+(C.firm||'i3d Studio')+'. I am '+VA.name+', your design assistant. You are viewing the '+(C.proj||'project')+' deliverable. How may I help?','Friendly & Casual':'Hey! '+t+'. I am '+VA.name+' from '+(C.firm||'i3d Studio')+'. I can walk you through the drawings, pricing and file access. What would you like to know?','Formal & Corporate':t+'. Welcome to the '+(C.firm||'i3d Studio')+' professional portal. I am '+VA.name+'. How may I assist you?'};
+  return styles[VA.greetStyle]||styles['Warm & Professional'];
 }
 function togVA(){var p=document.getElementById('vap');if(p.classList.contains('open'))closeVA();else openVA();}
 function openVA(){document.getElementById('vap').classList.add('open');var c=document.getElementById('vac');if(c)c.scrollTop=c.scrollHeight;}
@@ -635,33 +728,31 @@ function sendMsg(){
 function sendQ(t){document.getElementById('vai').value=t;sendMsg();}
 function getAIR(msg){
   if(!VA.apiKey)return Promise.resolve(fallback(msg));
-  var sys='You are '+VA.name+', a warm assistant for '+(C.firm||'i3d Studio')+'. Project: '+(C.proj||'')+' ('+(C.dtype||'')+') in '+(C.loc||'')+'. Packages: '+pricing.filter(function(p){return p.name&&p.rate;}).map(function(p){return p.name+' ₹'+p.rate;}).join(', ')+'. Files via Google Drive after UPI payment. Be concise — 2-3 sentences.';
+  var sys='You are '+VA.name+', a warm assistant for '+(C.firm||'i3d Studio')+'. Project: '+(C.proj||'')+' ('+(C.dtype||'')+') in '+(C.loc||'')+'. Packages: '+pricing.filter(function(p){return p.name&&p.rate;}).map(function(p){return p.name+' Rs '+p.rate;}).join(', ')+'. Files via Google Drive after UPI payment. Be concise - 2-3 sentences.';
   return fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:220,system:sys,messages:VA.history.slice(-6).concat([{role:'user',content:msg}])})})
     .then(function(r){return r.json();}).then(function(d){if(d.content&&d.content[0])return d.content[0].text;throw new Error('No reply');});
 }
 function fallback(t){
   var tl=t.toLowerCase();
-  if(tl.includes('draw')||tl.includes('what')||tl.includes('includ'))return 'This portal contains '+(C.dtype||'drawings')+' for '+(C.proj||'the project')+'. The '+files.filter(function(f){return f.name;}).length+' files are delivered via Google Drive — links are blurred until payment is verified.';
-  if(tl.includes('pric')||tl.includes('cost')||tl.includes('charg'))return 'We have '+pricing.filter(function(p){return p.name;}).length+' packages. Select the one that suits your scope and click Unlock to proceed with payment.';
-  if(tl.includes('pay')||tl.includes('code')||tl.includes('how'))return 'Select your package, click Unlock, scan the GPay QR or pay to our UPI ID. Once confirmed, I will send you a 6-digit WhatsApp code. Enter it here to unlock all Google Drive links instantly.';
-  if(tl.includes('file')||tl.includes('drive')||tl.includes('download'))return 'After entering the WhatsApp code, the Google Drive links appear right here in the sidebar. Click Open next to each file to download directly — no email needed.';
-  if(tl.includes('thank'))return "You're most welcome! Feel free to ask if you need anything else.";
-  return "I'd be happy to help! Select a package on the right, complete the UPI payment, and use the WhatsApp code to unlock all files instantly. Shall I walk you through any step?";
+  if(tl.includes('draw')||tl.includes('what')||tl.includes('includ'))return 'This portal contains '+(C.dtype||'drawings')+' for '+(C.proj||'the project')+'. The '+files.filter(function(f){return f.name;}).length+' files are accessible via Google Drive after payment.';
+  if(tl.includes('pric')||tl.includes('cost')||tl.includes('charg'))return 'We have '+pricing.filter(function(p){return p.name;}).length+' packages available. Select the one that fits your scope and click Unlock to proceed.';
+  if(tl.includes('pay')||tl.includes('code')||tl.includes('how'))return 'Select your package, click Unlock and Download, pay via GPay or any UPI app. Once confirmed, you will receive a 6-digit WhatsApp code. Enter it here to unlock all files instantly.';
+  if(tl.includes('file')||tl.includes('drive')||tl.includes('download'))return 'After entering the WhatsApp code, the Google Drive links become active in the sidebar. Click Open next to each file to download directly.';
+  return 'I am happy to help! Select a package, complete the UPI payment, and use the WhatsApp code to unlock all files instantly.';
 }
-function ttsC(t){return t.replace(/3D/g,'three D').replace(/i3d/gi,'i three D').replace(/UPI/g,'U P I').replace(/GPay/gi,'Google Pay').replace(/₹/g,' rupees ').replace(/\s+/g,' ').trim();}
+function ttsC(t){return t.replace(/Rs/g,'rupees').replace(/i3d/gi,'i three D').replace(/UPI/g,'U P I').replace(/GPay/gi,'Google Pay').replace(/\s+/g,' ').trim();}
 function vSpeak(text){
-  if(!VA.synth)return;
-  VA.synth.cancel();
-  var utt=new SpeechSynthesisUtterance(ttsC(text).substring(0,320));
+  if(!VA.synth)return;VA.synth.cancel();
+  var utt=new SpeechSynthesisUtterance(ttsC(text).substring(0,300));
   utt.lang='en-IN';utt.rate=0.91;utt.pitch=VA.gender==='female'?1.12:0.9;
   var voices=VA.synth.getVoices();
   var ranked=voices.filter(function(v){return v.lang.startsWith('en');}).sort(function(a,b){
-    function sc(v){var s=0,n=v.name.toLowerCase();if(VA.gender==='female'){if(n.includes('female')||n.includes('zira')||n.includes('samantha')||n.includes('aditi'))s+=8;}else{if(n.includes('david')||n.includes('mark'))s+=8;}if(v.lang.includes('en-IN'))s+=5;if(n.includes('google'))s+=3;return s;}
+    function sc(v){var s=0,n=v.name.toLowerCase();if(VA.gender==='female'&&(n.includes('female')||n.includes('zira')||n.includes('samantha')||n.includes('aditi')))s+=8;if(v.lang.includes('en-IN'))s+=5;if(n.includes('google'))s+=3;return s;}
     return sc(b)-sc(a);
   });
   if(ranked[0])utt.voice=ranked[0];
-  utt.onstart=function(){VA.speaking=true;document.getElementById('vab').classList.add('sp');document.getElementById('vawv').classList.add('act');ss('vabl','Speaking…');};
-  utt.onend=function(){VA.speaking=false;document.getElementById('vab').classList.remove('sp');document.getElementById('vawv').classList.remove('act');ss('vabl','Ask '+VA.name);};
+  utt.onstart=function(){document.getElementById('vab').classList.add('sp');document.getElementById('vawv').classList.add('act');ss('vabl','Speaking...');};
+  utt.onend=function(){document.getElementById('vab').classList.remove('sp');document.getElementById('vawv').classList.remove('act');ss('vabl','Ask '+VA.name);};
   VA.synth.speak(utt);
 }
 </script>
